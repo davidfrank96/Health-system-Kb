@@ -1,0 +1,47 @@
+{
+  "name": "kbean-health-system",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22.12.0 <23"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "bash database/native.sh integration",
+    "test:e2e": "playwright test",
+    "dev": "next dev apps/web --hostname 127.0.0.1",
+    "build": "next build apps/web --webpack",
+    "start": "next start apps/web --hostname 127.0.0.1",
+    "local": "bash database/native.sh local",
+    "job:check": "node jobs/check.mjs",
+    "test:e2e:db": "bash database/native.sh browser",
+    "db:migrate": "node database/migrate.mjs",
+    "db:approve": "node database/approve-staff.mjs",
+    "test:db": "bash database/native.sh verify"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.5",
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3",
+    "vitest": "5.1.0",
+    "yaml": "2.9.1"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "4.3.4",
+    "jose": "6.2.15",
+    "next": "16.4.5",
+    "openid-client": "6.8.9",
+    "pg": "8.23.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwindcss": "4.3.4",
+    "zod": "4.6.7"
+  }
+}

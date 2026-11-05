@@ -1,0 +1,12 @@
+{
+	"files": {
+		"includes": [
+			"**",
+			"!!**/.next",
+			"!!**/test-results",
+			"!!**/playwright-report",
+			"!!docs/archive"
+		]
+	},
+	"css": { "parser": { "tailwindDirectives": true } }
+}

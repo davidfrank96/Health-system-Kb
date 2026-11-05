@@ -1,10 +1,12 @@
 # Lean internal API rules
 
-[OpenAPI](openapi.yaml) version 0.2.0-planning is a proposed contract. Every operation is UNIMPLEMENTED and the server is `.invalid`. No deployed endpoint is claimed. The earlier contract is preserved under docs/archive/phase-00-v1.
+[OpenAPI](openapi.yaml) 0.3.0-foundation labels each locally implemented operation. The seven implemented operations cover staff identity, service list/create/read/update and process liveness/readiness. Other operations are phase plans. The .invalid server remains a documentation placeholder.
+
+Local paths: GET /auth/login starts OIDC, GET /auth/callback verifies the identity and POST /auth/logout requires same-origin form CSRF. GET /api/v1/me returns a session-bound X-CSRF-Token header. Service create and update require that header, Origin and Idempotency-Key. PATCH uses a complete validated ServiceInput and quoted If-Match. The stable UUID cursor is signed for the environment and actor. Current service health is unknown with missing freshness, and verification is unverified. Endpoint registration and collection are deferred. The remaining design below includes future controls, statuses and proposed rate limits.
 
 ## Authentication and scope
 
-All `/api/v1` routes require approved staff session except `/api/v1/webhooks/qa/runs`, which requires the separate QA HMAC sender identity. This includes `/status/overview` and `/status/history`: names do not make them public. `/health/live` and `/health/ready` expose only minimal process/readiness state; no monitored target, secret or report data. OIDC sign-in/callback/logout paths will be finalized with the standard library and documented/tested in Phase 01. No public publish, subscriptions or anonymous report access.
+All `/api/v1` routes require approved staff session except `/api/v1/webhooks/qa/runs`, which requires the separate QA HMAC sender identity. This includes `/status/overview` and `/status/history`: names do not make them public. `/health/live` and `/health/ready` expose only minimal process/readiness state; no monitored target, secret or report data. Local OIDC routes are implemented as listed above. No public publish, subscriptions or anonymous report access.
 
 Viewer reads permitted environments; Operator additionally imports metrics/QA and manages incidents/maintenance; Admin manages service/target/integration settings and audit. Mutations resolve stored object's scope before writing. Service/endpoint/maintenance environment is immutable; moving data needs a deliberate future migration. Setting enabled requires existing recorded target or cost/permission approvals, not a self-asserted client flag. Secrets never pass through these DTOs.
 
@@ -26,4 +28,4 @@ CSV preview/commit and provenance are defined in [manual-imports](../integration
 
 Reports are synchronous bounded queries over stored evidence. Summary JSON supports the internal HTML UI; export streams private CSV with source method/observed time/coverage/method version and formula protection. No report object storage, report IDs/jobs, signed public URLs or external document service. Expensive/unbounded requests are rejected; narrowing period is the fallback.
 
-Remaining Phase 01 detail: standard-library auth paths, bootstrap/membership administration and exact migration/validation tool choices. These are local framework decisions, not authorization for infrastructure. The lean contract intentionally removes asset/public-revision/alert-delivery endpoints from the prior draft; no existing clients exist to migrate. Breaking future semantics require versioning and tests.
+See the native database guide for owner approval and migrations, and the acceptance report for test evidence. These are local framework decisions, not authorization for infrastructure. The lean contract intentionally removes asset/public-revision/alert-delivery endpoints from the prior draft; no existing clients exist to migrate. Breaking future semantics require versioning and tests.

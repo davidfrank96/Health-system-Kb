@@ -1,6 +1,6 @@
 # Lean verification strategy
 
-Documentation revision checks only now. Later implementation needs meaningful tests; no dependency installation, app build, provider probe or restore occurred during this revision.
+Use this strategy during every implementation milestone. Current executed evidence and the open product checks are in the [Phase 01 report](../reports/phase-01-report.md).
 
 | Layer | Tool/target | Required proof |
 | --- | --- | --- |
@@ -26,3 +26,39 @@ Assume 10 staff accounts, five concurrent staff sessions, 20 approved HTTPS endp
 - Proposed recovery objectives RPO <=24h and RTO <=1 business day; measured managed restore and cleanup before release. More ambitious guarantees, independent uptime SLO or external notification delivery targets are not MVP acceptance criteria.
 
 Local tests are primary. Remote staging is only for a documented gap (OIDC deployment behavior, small-plan performance, managed restore), with approved budget/lifetime and teardown. Document commands, versions, revision, targets, workload, pass/fail and limitations per phase. Passing document/OpenAPI checks does not mean runtime requirements are satisfied.
+
+## Local setup and checks
+
+Use [native PostgreSQL setup and reset](../database/local-development.md). Development is persistent and automated integration/browser tests run on disposable databases. The built application uses real OIDC code exchange with a signed local issuer, real sessions, real inventory routes and the restricted web DB role. Cloud integrations stay disabled. Keep component-fixture and API contract results separate from running application evidence.
+
+```sh
+corepack pnpm install --frozen-lockfile
+PLAYWRIGHT_SKIP_BROWSER_GC=1 corepack pnpm exec playwright install chromium --only-shell
+corepack pnpm typecheck
+corepack pnpm lint
+corepack pnpm test:unit
+NEXT_TELEMETRY_DISABLED=1 corepack pnpm build
+corepack pnpm test:e2e
+corepack pnpm test:db
+corepack pnpm audit --audit-level=high
+gitleaks git --redact --ignore-gitleaks-allow --log-opts=HEAD .
+```
+
+The first Playwright command runs public application behavior, OIDC failure cases, context isolation and a separate dashboard component fixture. The combined DB command validates migrations and grants, then runs authenticated Playwright against the actual built app. Separate commands are available as `test:integration` and `test:e2e:db`. Record missing prerequisites or suites as pending. Git secret checks cover history through HEAD; scan working changes separately. The PR workflow uses one hosted runner, an isolated PostgreSQL 18 service, a 15-minute timeout and three-day failure-only browser artifacts. Credentials for production or cloud systems must never reach PR code. Synthetic traces may contain temporary local session data.
+
+## Phase report and acceptance
+
+At each significant milestone record the requirement, changed behavior, revision, commands, tool versions, fixture/target, passed/failed/skipped counts, unexecuted checks and reason, defects, blockers and next action in the build log. Give the owner a short progress report. Maintain architecture, setup/configuration, API, database and security documentation with the feature. Select coverage for critical behavior and regression risk without a percentage quota.
+
+Maintain one report per phase at `docs/reports/phase-XX-report.md` from Phase 01 onward. Mark milestone reports in progress until all phase criteria are evidenced.
+
+| Section | Evidence required |
+| --- | --- |
+| A. Implementation summary | Completed, partial and pending features, requirement IDs and technical decisions |
+| B. Architecture and code changes | Modules, migrations, API, dependencies and configuration |
+| C. Testing report | Tests implemented and executed by layer, commands and counts, Playwright/authorization results, failures, skips, unrun checks and defects |
+| D. Documentation | Updated docs, decisions, setup instructions and remaining gaps |
+| E. Security and quality review | Controls verified on actual targets, configuration and dependency issues, remaining risks and limitations |
+| F. Phase acceptance | Criterion-by-criterion evidence, blockers, repository/branch status and readiness for owner review |
+
+Accept only when the approved features work, required tests ran, critical failures are resolved, phase security controls are validated, current docs and known limitations are recorded, and the report is reviewable. Keep the gate open where proof is missing. Stop before the next phase until it is explicitly authorized.
