@@ -1,0 +1,27 @@
+# Sampled health, history and freshness
+
+Revision 2 proposals. Default availability sampling is one slot every 15 minutes. Health has two axes: condition `healthy | degraded | down | maintenance | unknown` and quality `fresh | stale | missing | partial | error | unsupported`. API/UI always show source method and age; manual snapshots never certify automatic availability.
+
+## Checks and confirmation
+
+Per-endpoint result: success, failure or unknown. Store scheduled slot, actual observation/collection times, HTTP code if received, latency, attempts and safe failure category. A transport failure does not invent an HTTP response. One initial attempt plus at most one bounded retry belongs to one slot and provides one vote, not two consecutive checks.
+
+First failed fresh slot → suspected issue/degraded; two consecutive eligible failed slots → confirmed sampled downtime record, first_failed_at and confirmed_at retained. Two consecutive fresh successes resolve it, storing first_recovery_at and resolved_at. Missing, skipped or maintenance slots break the consecutive sequence; they neither confirm nor clear an outage. A pending confirmed outage with stale evidence is shown with stale/unknown status, not automatically resolved. Known global collector/network failure is unknown, not a mass service outage. At 15m intervals detection/confirmation can take approximately 15–30m plus scheduling/runtime delay; rapid recovery can be missed.
+
+Status per service uses approved required endpoints: any confirmed down → down; otherwise any failed/slow required endpoint → degraded; otherwise missing/stale required endpoint → unknown; otherwise active maintenance → maintenance; otherwise healthy. Show maintenance and known issues separately. Do not add automatic dependency propagation in v1. Latency warning proposal >2s for two consecutive valid slots, clear after two <1s, subject to endpoint owner approval.
+
+Availability freshness: actual last observation older than 35m is stale (two slots plus 5m tolerance); no observation is missing. Expected slot coverage is separately computed, so a missed slot can show a gap before the age threshold expires. DO metrics collect no faster than 15m and are stale after 45m plus verified provider lag. Other sources use their verified intervals/lag. Manual snapshots default to 24h maximum age unless a metric-specific policy is approved; show “manual, observed at, entered at” even when recent. QA freshness uses the suite's expected execution schedule, not a fabricated daily cadence. Reject future observation times beyond 2m clock tolerance.
+
+## Availability method: scheduled samples, not continuous duration
+
+Use 15-minute UTC slots whose scheduled instant lies in `[start,end)` and whose target was enabled. Before onboarding is not monitored, not successful. Exclude only slots whose scheduled instant falls within approved maintenance; return excluded count. Of eligible E slots, S successful, F failed and U unknown/missing satisfy E=S+F+U. A retry yields one final slot outcome; collector failures are U. First failed samples count F even before downtime confirmation.
+
+Coverage = `(S+F)/E`; observed sampled availability = `S/(S+F)`; conservative sample lower bound = `S/E`, upper bound = `(S+U)/E`. Zero denominators yield null with a reason. These are bounds on missing samples, not bounds on actual continuous uptime. Always label the percentage “sampled availability (15m)”; >=95% coverage is proposed for a prominent percentage, otherwise show insufficient coverage and an explicitly qualified estimate. Never remove the sampled label at 100% coverage.
+
+Example: 96 eligible daily slots, 90 successes, 2 failures and 4 unknowns → coverage 95.83%, observed availability 97.83%, sample bounds 93.75–97.92%. A one-minute outage between successes may be invisible. Do not state observed downtime intervals as exact customer downtime: first failure/confirmation/recovery observation timestamps bound what was seen; estimated elapsed duration is labeled and retains gaps.
+
+Daily summaries retain counts, maintenance/not-monitored slots, latest observation watermark, method version and manual/automatic separation. Recompute recent affected days after eligible corrections; sum counts over 7/30/90 days, never average daily percentages. Raw checks/snapshots 30d, daily summaries 12m proposed. No hourly pipeline or partitioning required. Maintenance changes affecting summarized periods require an audited recomputation while evidence remains; older periods cannot be silently rewritten.
+
+## Issues instead of a new notification platform
+
+Overview flags confirmed downtime, prolonged degraded latency, stale collectors, unsupported/disabled integrations, capacity threshold breaches and failed QA. Thresholds are per approved metric (e.g. CPU >85% or disk >80% across two valid samples), not automatic proof of outage. No paid/external alerts, public subscribers, escalation engine or delivery SLO in MVP. Preserve existing provider alerts; operators use the private dashboard and existing authorized operational channels. Operational silence during complete system failure is an acknowledged limitation.

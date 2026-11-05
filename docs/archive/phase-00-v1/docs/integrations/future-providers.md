@@ -1,0 +1,7 @@
+# Future providers and monitoring engines
+
+Hashio and Fusion are unresolved product names. Do not install an SDK, choose an endpoint, assign permissions, estimate metric coverage or enable collection until the owner supplies vendor/product identity and authoritative documentation. Discovery checklist: identity, owner, asset/environment, read-only interface, auth/scopes, supported metric descriptors, source lag, limits/cost, test fixture, retention, alert authority and approval evidence.
+
+For Kuma use the documented [Prometheus interface](https://github.com/louislam/uptime-kuma/wiki/Prometheus-Integration). Metrics-only authentication is preferred; labels contain private target details and remain internal. The API-Documentation wiki URL redirected to the wiki home during research, so this review did not establish a stable administration contract. Manually configure approved monitors via a reviewed operational procedure and record monitor-to-asset mappings. Phase 03 must test source heartbeat/recency and gauge semantics on a pinned version before publishing availability history.
+
+Prometheus queries are made only by worker/private diagnostics with allowlisted query templates and bounded ranges, never arbitrary PromQL from public browsers. Grafana, Prometheus and Kuma administration remain private behind authenticated engineer access. Pin images/digests, verify upgrade compatibility and license obligations at implementation. Existing Wazuh/Eramba integrations start as authorized references; no new SIEM ingestion is proposed.

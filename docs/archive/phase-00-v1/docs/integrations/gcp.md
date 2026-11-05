@@ -1,0 +1,9 @@
+# Google Cloud integration design
+
+Use the official [`@google-cloud/monitoring` Node client](https://docs.cloud.google.com/nodejs/docs/reference/monitoring/latest) or equivalent documented Cloud Monitoring v3 requests. Discover metric and monitored-resource descriptors within approved projects, then query bounded time series with explicit aligners and reducers.
+
+A purpose-specific per-environment service identity receives `roles/monitoring.viewer` or a narrower reviewed custom role. [Cloud Monitoring IAM](https://docs.cloud.google.com/monitoring/access-control) documents its read access. Inspect metrics scopes: a scoping project can expose other projects, so authorization must consider the full effective scope, not only a supplied project ID. Do not grant metricWriter/editor/admin or use business-data credentials. Federation from DigitalOcean needs a verified issuer path; it is a preference, not an assumed capability.
+
+Candidate families: load-balancer/CDN request counts/error classes/cache behavior, backend latency distributions, and storage usage/request counts. Actual descriptor names, latency and instrumented resources must be recorded before support is claimed. Query each selected capability every 5–15m; set stale age to 3×interval plus verified source lag. Preserve distribution semantics; do not average p95 values or mix different alignment periods.
+
+Quotas and Monitoring read/pricing rules depend on request volume and method. Estimate series × points × queries, impose max pages/time range/cardinality, and record billing-owner approval; do not quote a zero cost without a workload. Handle partial pages and unavailable regions independently. Test scope leakage, empty descriptors, delayed data, invalid aligners, permission revocation, 429 and malicious/unbounded labels. No GCP services or alert policies are enabled by discovery.

@@ -1,0 +1,2699 @@
+openapi: 3.0.3
+info:
+  title: Kbean Health System proposed API
+  version: 0.1.0-planning
+  description: Phase 00 design only. Every operation is UNIMPLEMENTED. No live server or credentials exist. See
+    README.md for cross-field invariants and authorization.
+servers:
+- url: https://health.example.invalid
+  description: Non-resolving documentation placeholder, not a deployment
+security:
+- SessionCookie: []
+paths:
+  /api/v1/status/overview:
+    get:
+      operationId: getPublicOverview
+      summary: getPublicOverview
+      description: UNIMPLEMENTED. Approved publication fields only. History limited to 90 days, daily UTC buckets;
+        cursor binds window. No internal identifiers or labels.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters: []
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicOverview'
+          headers:
+            X-Request-Id:
+              schema: &id001
+                type: string
+                format: uuid
+              description: Trace identifier without sensitive details
+        '400': &id002
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401': &id003
+          description: Authentication failed
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403': &id004
+          description: Denied
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404': &id005
+          description: Not found in authorized scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429': &id006
+          description: Rate limited; Retry-After supplied
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
+              description: Seconds before retry
+        '503': &id007
+          description: Temporarily unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security: []
+  /api/v1/status/components:
+    get:
+      operationId: listPublicComponents
+      summary: listPublicComponents
+      description: UNIMPLEMENTED. Approved publication fields only. History limited to 90 days, daily UTC buckets;
+        cursor binds window. No internal identifiers or labels.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicComponentPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+  /api/v1/status/history:
+    get:
+      operationId: getPublicHistory
+      summary: getPublicHistory
+      description: UNIMPLEMENTED. Approved publication fields only. History limited to 90 days, daily UTC buckets;
+        cursor binds window. No internal identifiers or labels.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - name: componentId
+        in: query
+        required: true
+        schema: *id001
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicHistoryBucketPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+  /api/v1/status/incidents:
+    get:
+      operationId: listPublicIncidents
+      summary: listPublicIncidents
+      description: UNIMPLEMENTED. Approved publication fields only. History limited to 90 days, daily UTC buckets;
+        cursor binds window. No internal identifiers or labels.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicIncidentPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+  /api/v1/status/maintenance:
+    get:
+      operationId: listPublicMaintenance
+      summary: listPublicMaintenance
+      description: UNIMPLEMENTED. Approved publication fields only. History limited to 90 days, daily UTC buckets;
+        cursor binds window. No internal identifiers or labels.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicMaintenancePage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+  /api/v1/health/overview:
+    get:
+      operationId: getHealthOverview
+      summary: getHealthOverview
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthOverview'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/assets:
+    get:
+      operationId: listAssets
+      summary: listAssets
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/assets/{id}:
+    get:
+      operationId: getAsset
+      summary: getAsset
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/metrics/latest:
+    get:
+      operationId: getMetricsLatest
+      summary: getMetricsLatest
+      description: 'UNIMPLEMENTED. History: <=30d raw, <=90d hourly or <=366d daily; start < end. Missing values
+        remain null; no arbitrary provider query language.'
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/AssetId'
+      - $ref: '#/components/parameters/MetricName'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/metrics/history:
+    get:
+      operationId: getMetricsHistory
+      summary: getMetricsHistory
+      description: 'UNIMPLEMENTED. History: <=30d raw, <=90d hourly or <=366d daily; start < end. Missing values
+        remain null; no arbitrary provider query language.'
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/AssetId'
+      - $ref: '#/components/parameters/MetricName'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - name: resolution
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - raw
+          - hour
+          - day
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/integrations:
+    get:
+      operationId: listIntegrations
+      summary: listIntegrations
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/integrations/{id}/health:
+    get:
+      operationId: getIntegrationHealth
+      summary: getIntegrationHealth
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationHealth'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/incidents:
+    get:
+      operationId: listIncidents
+      summary: listIncidents
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+    post:
+      operationId: createIncident
+      summary: createIncident
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': &id008
+          description: Revision or idempotency conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413': &id009
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCreate'
+  /api/v1/maintenance:
+    get:
+      operationId: listMaintenance
+      summary: listMaintenance
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenancePage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+    post:
+      operationId: createMaintenance
+      summary: createMaintenance
+      description: UNIMPLEMENTED. Internal maintenance only; end > start; all assets must share authorized environment.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceInput'
+  /api/v1/qa/runs:
+    get:
+      operationId: listQARuns
+      summary: listQARuns
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARunPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/security/findings:
+    get:
+      operationId: listFindingReferences
+      summary: listFindingReferences
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindingReferencePage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/reports:
+    get:
+      operationId: listReports
+      summary: listReports
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+    post:
+      operationId: requestReport
+      summary: requestReport
+      description: UNIMPLEMENTED. Bounded <=366d authorized environment; start < end. Returns durable queued report.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+  /api/v1/alerts:
+    get:
+      operationId: listAlerts
+      summary: listAlerts
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/audit-events:
+    get:
+      operationId: listAuditEvents
+      summary: listAuditEvents
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditEventPage'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/incidents/{id}/updates:
+    post:
+      operationId: updateIncident
+      summary: updateIncident
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentUpdate'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdateInput'
+  /api/v1/incidents/{id}/public-revisions:
+    post:
+      operationId: previewPublicIncident
+      summary: previewPublicIncident
+      description: UNIMPLEMENTED. Creates sanitized draft only. Separate publisher capability required for release.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationPreview'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicationInput'
+  /api/v1/public-revisions/{id}/publish:
+    post:
+      operationId: publishPublicRevision
+      summary: publishPublicRevision
+      description: UNIMPLEMENTED. Requires separate publisher capability, matching digest/revision and approved
+        public components. Atomic publication plus audit.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishInput'
+      x-required-capability: publisher
+  /api/v1/public-revisions/{id}/retract:
+    post:
+      operationId: retractPublicRevision
+      summary: retractPublicRevision
+      description: UNIMPLEMENTED. Requires publisher capability; audit retained; delivered notifications cannot
+        be recalled.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonInput'
+      x-required-capability: publisher
+  /api/v1/alerts/{id}/acknowledgements:
+    post:
+      operationId: acknowledgeAlert
+      summary: acknowledgeAlert
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonInput'
+  /api/v1/alerts/{id}/silences:
+    post:
+      operationId: silenceAlert
+      summary: silenceAlert
+      description: UNIMPLEMENTED. until must be future and <=24h; expiry and actor audited.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SilenceInput'
+  /api/v1/reports/{id}:
+    get:
+      operationId: getReport
+      summary: getReport
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+            ETag:
+              schema:
+                type: string
+                maxLength: 80
+              description: Quoted revision for optimistic concurrency where applicable
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /api/v1/reports/{id}/export:
+    get:
+      operationId: exportReport
+      summary: exportReport
+      description: UNIMPLEMENTED. Audited authorized snapshot download. No arbitrary source URL. Escape HTML and
+        CSV formulas; unavailable report returns 409.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      - name: format
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - html
+          - csv
+          - json
+      responses:
+        '200':
+          description: Authorized immutable report snapshot; no-store. JSON includes metadata plus sanitized report
+            content.
+          content:
+            text/html:
+              schema:
+                type: string
+                maxLength: 1000000
+            text/csv:
+              schema:
+                type: string
+                maxLength: 1000000
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  report:
+                    $ref: '#/components/schemas/Report'
+                  sections:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      properties:
+                        title:
+                          type: string
+                          maxLength: 200
+                        text:
+                          type: string
+                          maxLength: 10000
+                      required:
+                      - title
+                      - text
+                    maxItems: 100
+                required:
+                - report
+                - sections
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+        '409': *id008
+  /api/v1/webhooks/qa/runs:
+    post:
+      operationId: receiveQARun
+      summary: receiveQARun
+      description: UNIMPLEMENTED. <=256 KiB raw body. HMAC binds timestamp.eventId.rawBody; ±300s. Key binds asset/env.
+        Durable inbox+job before acceptance. See qa.md.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - name: X-Kbean-Key-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          maxLength: 100
+      - name: X-Kbean-Timestamp
+        in: header
+        required: true
+        schema:
+          type: string
+          maxLength: 20
+          pattern: ^[0-9]+$
+      - name: X-Kbean-Event-Id
+        in: header
+        required: true
+        schema: *id001
+      responses:
+        '202':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedEvent'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '409': *id008
+        '413': *id009
+        '429': *id006
+        '503': *id007
+        '200':
+          description: Identical duplicate accepted previously; no new run/job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptedEvent'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QARunInput'
+      security:
+      - QASignature: []
+  /api/v1/me:
+    get:
+      operationId: getCurrentUser
+      summary: getCurrentUser
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters: []
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+  /health/live:
+    get:
+      operationId: getLive
+      summary: getLive
+      description: UNIMPLEMENTED. Minimal status only; readiness checks local critical dependencies with timeout,
+        not all provider APIs.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters: []
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+  /health/ready:
+    get:
+      operationId: getReady
+      summary: getReady
+      description: UNIMPLEMENTED. Minimal status only; readiness checks local critical dependencies with timeout,
+        not all provider APIs.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters: []
+      responses:
+        '200':
+          description: Successful proposed response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          headers:
+            X-Request-Id:
+              schema: *id001
+              description: Trace identifier without sensitive details
+        '400': *id002
+        '401': *id003
+        '403': *id004
+        '404': *id005
+        '429': *id006
+        '503': *id007
+      security: []
+components:
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-kbean_session
+    QASignature:
+      type: apiKey
+      in: header
+      name: X-Kbean-Signature
+      description: v1=HMAC-SHA256 hex over timestamp.eventId.rawBody. Requires key ID, timestamp and event ID. See
+        QA design.
+  parameters:
+    Environment:
+      name: environment
+      in: query
+      required: true
+      schema: &id014
+        type: string
+        enum:
+        - production
+        - staging
+        - development
+      description: Must be authorized by session membership; no implicit cross-environment default.
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+        maxLength: 512
+      description: Opaque cursor bound to filter, scope and stable time/id ordering.
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: *id001
+    Start:
+      name: start
+      in: query
+      required: true
+      schema: &id010
+        type: string
+        format: date-time
+    End:
+      name: end
+      in: query
+      required: true
+      schema: *id010
+    AssetId:
+      name: assetId
+      in: query
+      required: true
+      schema: *id001
+    MetricName:
+      name: metric
+      in: query
+      required: true
+      schema:
+        type: string
+        maxLength: 150
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 80
+      description: Quoted current revision ETag. Stale revisions return 409.
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+        minLength: 16
+      description: Actor+route scoped, retained 24h. Same payload returns original response; conflict returns 409.
+    Csrf:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 256
+      description: Session-bound token plus server Origin validation for browser mutations.
+  schemas:
+    Problem:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          maxLength: 500
+          format: uri
+        title:
+          type: string
+          maxLength: 200
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        code:
+          type: string
+          maxLength: 80
+        requestId: *id001
+        detail:
+          type: string
+          maxLength: 500
+      required:
+      - type
+      - title
+      - status
+      - code
+      - requestId
+    HealthCheck:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - ok
+          - unavailable
+      required:
+      - status
+    Freshness:
+      type: object
+      additionalProperties: false
+      properties:
+        quality: &id015
+          type: string
+          enum:
+          - fresh
+          - stale
+          - missing
+          - partial
+          - error
+          - unsupported
+        observedAt: &id011
+          type: string
+          format: date-time
+          nullable: true
+        collectedAt: *id011
+        ageSeconds:
+          type: number
+          minimum: 0
+          nullable: true
+        staleAfterSeconds:
+          type: integer
+          minimum: 1
+      required:
+      - quality
+      - observedAt
+      - collectedAt
+      - ageSeconds
+      - staleAfterSeconds
+    Availability:
+      type: object
+      additionalProperties: false
+      properties:
+        windowStart: *id010
+        windowEnd: *id010
+        successfulSeconds:
+          type: number
+          minimum: 0
+        failedSeconds:
+          type: number
+          minimum: 0
+        unknownSeconds:
+          type: number
+          minimum: 0
+        maintenanceSeconds:
+          type: number
+          minimum: 0
+        coveragePercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        observedAvailabilityPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        lowerBoundPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        upperBoundPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        headlineEligible:
+          type: boolean
+        maintenancePolicy:
+          type: string
+          enum:
+          - excluded
+          - included
+        method:
+          type: string
+          enum:
+          - sampled-duration-v1
+        nullReason:
+          type: string
+          maxLength: 200
+          nullable: true
+      required:
+      - windowStart
+      - windowEnd
+      - successfulSeconds
+      - failedSeconds
+      - unknownSeconds
+      - maintenanceSeconds
+      - coveragePercent
+      - observedAvailabilityPercent
+      - lowerBoundPercent
+      - upperBoundPercent
+      - headlineEligible
+      - maintenancePolicy
+      - method
+      - nullReason
+    PublicComponent:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        name:
+          type: string
+          maxLength: 120
+        status: &id012
+          type: string
+          enum:
+          - operational
+          - degraded
+          - partial_outage
+          - major_outage
+          - maintenance
+          - unknown
+        updatedAt: *id010
+        freshness:
+          $ref: '#/components/schemas/Freshness'
+        availability:
+          $ref: '#/components/schemas/Availability'
+      required:
+      - id
+      - name
+      - status
+      - updatedAt
+      - freshness
+      - availability
+    PublicOverview:
+      type: object
+      additionalProperties: false
+      properties:
+        status: *id012
+        generatedAt: *id010
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicComponent'
+          maxItems: 100
+        activeIncidentCount:
+          type: integer
+          minimum: 0
+        coveragePercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+      required:
+      - status
+      - generatedAt
+      - components
+      - activeIncidentCount
+      - coveragePercent
+    PublicHistoryBucket:
+      type: object
+      additionalProperties: false
+      properties:
+        componentId: *id001
+        date:
+          type: string
+          format: date
+        status: *id012
+        availability:
+          $ref: '#/components/schemas/Availability'
+      required:
+      - componentId
+      - date
+      - status
+      - availability
+    PublicTimelineEntry:
+      type: object
+      additionalProperties: false
+      properties:
+        at: *id010
+        status: &id013
+          type: string
+          enum:
+          - investigating
+          - identified
+          - monitoring
+          - resolved
+        message:
+          type: string
+          maxLength: 4000
+      required:
+      - at
+      - status
+      - message
+    PublicIncident:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        title:
+          type: string
+          maxLength: 200
+        status: *id013
+        impact: *id012
+        componentIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        startedAt: *id010
+        resolvedAt: *id011
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicTimelineEntry'
+          maxItems: 100
+      required:
+      - id
+      - title
+      - status
+      - impact
+      - componentIds
+      - startedAt
+      - resolvedAt
+      - updates
+    PublicMaintenance:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 4000
+        startsAt: *id010
+        endsAt: *id010
+        componentIds:
+          type: array
+          items: *id001
+          maxItems: 100
+      required:
+      - id
+      - title
+      - description
+      - startsAt
+      - endsAt
+      - componentIds
+    Asset:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        name:
+          type: string
+          maxLength: 120
+        productId: *id001
+        environment: *id014
+        provider:
+          type: string
+          maxLength: 50
+        resourceType:
+          type: string
+          maxLength: 100
+        owner:
+          type: string
+          maxLength: 120
+          nullable: true
+        criticality:
+          type: string
+          enum:
+          - critical
+          - high
+          - normal
+          - low
+        verification:
+          type: string
+          enum:
+          - unverified
+          - verified
+          - approved
+        condition:
+          type: string
+          enum:
+          - healthy
+          - degraded
+          - down
+          - maintenance
+          - unknown
+        freshness:
+          $ref: '#/components/schemas/Freshness'
+      required:
+      - id
+      - name
+      - productId
+      - environment
+      - provider
+      - resourceType
+      - owner
+      - criticality
+      - verification
+      - condition
+      - freshness
+    HealthOverview:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id014
+        generatedAt: *id010
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+          maxItems: 100
+        activeIncidents:
+          type: integer
+          minimum: 0
+        staleIntegrations:
+          type: integer
+          minimum: 0
+        coveragePercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+      required:
+      - environment
+      - generatedAt
+      - assets
+      - activeIncidents
+      - staleIntegrations
+      - coveragePercent
+    Metric:
+      type: object
+      additionalProperties: false
+      properties:
+        assetId: *id001
+        environment: *id014
+        provider:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 150
+        unit:
+          type: string
+          maxLength: 50
+        aggregation:
+          type: string
+          enum:
+          - sum
+          - mean
+          - min
+          - max
+          - count
+          - rate
+          - percentile
+        value:
+          type: number
+          nullable: true
+        observedAt: *id010
+        collectedAt: *id010
+        ingestedAt: *id010
+        intervalStart: *id010
+        intervalEnd: *id010
+        quality: *id015
+        seriesId:
+          type: string
+          format: uuid
+        definitionVersion:
+          type: integer
+          minimum: 1
+        dimensions:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - name
+            - value
+            properties:
+              name:
+                type: string
+                maxLength: 100
+              value:
+                type: string
+                maxLength: 200
+      required:
+      - assetId
+      - environment
+      - provider
+      - name
+      - unit
+      - aggregation
+      - value
+      - observedAt
+      - collectedAt
+      - ingestedAt
+      - intervalStart
+      - intervalEnd
+      - quality
+      - seriesId
+      - definitionVersion
+      - dimensions
+    Integration:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        provider:
+          type: string
+          maxLength: 50
+        environment: *id014
+        state:
+          type: string
+          enum:
+          - disabled
+          - unverified
+          - healthy
+          - degraded
+          - failed
+        supportedCapabilities:
+          type: array
+          items:
+            type: string
+            maxLength: 150
+          maxItems: 100
+        lastSuccessAt: *id011
+        lastErrorCode:
+          type: string
+          maxLength: 80
+          nullable: true
+      required:
+      - id
+      - provider
+      - environment
+      - state
+      - supportedCapabilities
+      - lastSuccessAt
+      - lastErrorCode
+    IntegrationHealth:
+      type: object
+      additionalProperties: false
+      properties:
+        integration:
+          $ref: '#/components/schemas/Integration'
+        freshness:
+          $ref: '#/components/schemas/Freshness'
+        pendingJobs:
+          type: integer
+          minimum: 0
+        lastRunId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - integration
+      - freshness
+      - pendingJobs
+      - lastRunId
+    Incident:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        environment: *id014
+        title:
+          type: string
+          maxLength: 200
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+        status: *id013
+        assetIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        ownerId:
+          type: string
+          format: uuid
+          nullable: true
+        startedAt: *id010
+        resolvedAt: *id011
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - environment
+      - title
+      - severity
+      - status
+      - assetIds
+      - ownerId
+      - startedAt
+      - resolvedAt
+      - version
+    IncidentCreate:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id014
+        title:
+          type: string
+          maxLength: 200
+          minLength: 1
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+        assetIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        startedAt: *id010
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+      required:
+      - environment
+      - title
+      - severity
+      - assetIds
+      - startedAt
+      - message
+    IncidentUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        status: *id013
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+        occurredAt: *id010
+      required:
+      - status
+      - message
+      - occurredAt
+    IncidentUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        incidentId: *id001
+        status: *id013
+        message:
+          type: string
+          maxLength: 4000
+        occurredAt: *id010
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - incidentId
+      - status
+      - message
+      - occurredAt
+      - version
+    MaintenanceInput:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id014
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 4000
+        assetIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        startsAt: *id010
+        endsAt: *id010
+      required:
+      - environment
+      - title
+      - description
+      - assetIds
+      - startsAt
+      - endsAt
+    Maintenance:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        environment: *id014
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 4000
+        assetIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        startsAt: *id010
+        endsAt: *id010
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - environment
+      - title
+      - description
+      - assetIds
+      - startsAt
+      - endsAt
+      - version
+    PublicationInput:
+      type: object
+      additionalProperties: false
+      properties:
+        componentIds:
+          type: array
+          items: *id001
+          maxItems: 100
+        title:
+          type: string
+          maxLength: 200
+          minLength: 1
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+        status: *id013
+        impact: *id012
+        occurredAt: *id010
+      required:
+      - componentIds
+      - title
+      - message
+      - status
+      - impact
+      - occurredAt
+    PublicationPreview:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        revision:
+          type: integer
+          minimum: 1
+        digest:
+          type: string
+          maxLength: 64
+          pattern: ^[a-f0-9]{64}$
+        publicIncident:
+          $ref: '#/components/schemas/PublicIncident'
+      required:
+      - id
+      - revision
+      - digest
+      - publicIncident
+    PublishInput:
+      type: object
+      additionalProperties: false
+      properties:
+        revision:
+          type: integer
+          minimum: 1
+        digest:
+          type: string
+          maxLength: 64
+          pattern: ^[a-f0-9]{64}$
+      required:
+      - revision
+      - digest
+    Publication:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        revision:
+          type: integer
+          minimum: 1
+        state:
+          type: string
+          enum:
+          - draft
+          - published
+          - retracted
+        updatedAt: *id010
+      required:
+      - id
+      - revision
+      - state
+      - updatedAt
+    ReasonInput:
+      type: object
+      additionalProperties: false
+      properties:
+        reason:
+          type: string
+          maxLength: 500
+          minLength: 1
+      required:
+      - reason
+    Counts:
+      type: object
+      additionalProperties: false
+      properties:
+        passed:
+          type: integer
+          minimum: 0
+        failed:
+          type: integer
+          minimum: 0
+        skipped:
+          type: integer
+          minimum: 0
+        flaky:
+          type: integer
+          minimum: 0
+      required:
+      - passed
+      - failed
+      - skipped
+      - flaky
+    EvidenceLink:
+      type: object
+      additionalProperties: false
+      properties:
+        label:
+          type: string
+          maxLength: 200
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+          pattern: ^https://
+      required:
+      - label
+      - url
+    FailureSummary:
+      type: object
+      additionalProperties: false
+      properties:
+        testName:
+          type: string
+          maxLength: 200
+        summary:
+          type: string
+          maxLength: 1000
+      required:
+      - testName
+      - summary
+    QARunInput:
+      type: object
+      additionalProperties: false
+      properties:
+        schemaVersion:
+          type: string
+          enum:
+          - '1'
+        sourceRunId:
+          type: string
+          maxLength: 200
+          minLength: 1
+        assetId: *id001
+        environment: *id014
+        suiteName:
+          type: string
+          maxLength: 200
+          minLength: 1
+        startedAt: *id010
+        completedAt: *id010
+        durationMs:
+          type: integer
+          minimum: 0
+        status:
+          type: string
+          enum:
+          - passed
+          - failed
+          - error
+          - cancelled
+        counts:
+          $ref: '#/components/schemas/Counts'
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/FailureSummary'
+          maxItems: 50
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvidenceLink'
+          maxItems: 20
+        deploymentId:
+          type: string
+          maxLength: 200
+        applicationVersion:
+          type: string
+          maxLength: 100
+      required:
+      - schemaVersion
+      - sourceRunId
+      - assetId
+      - environment
+      - suiteName
+      - startedAt
+      - completedAt
+      - durationMs
+      - status
+      - counts
+      - failures
+      - evidence
+    QARun:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        receivedAt: *id010
+        source:
+          $ref: '#/components/schemas/QARunInput'
+      required:
+      - id
+      - receivedAt
+      - source
+    AcceptedEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        eventId: *id001
+        state:
+          type: string
+          enum:
+          - accepted
+          - duplicate
+      required:
+      - eventId
+      - state
+    FindingReference:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        assetId: *id001
+        environment: *id014
+        source:
+          type: string
+          maxLength: 100
+        externalId:
+          type: string
+          maxLength: 200
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+          - unknown
+        title:
+          type: string
+          maxLength: 200
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+          pattern: ^https://
+        lastSeenAt: *id010
+      required:
+      - id
+      - assetId
+      - environment
+      - source
+      - externalId
+      - severity
+      - title
+      - url
+      - lastSeenAt
+    Report:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        environment: *id014
+        kind:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - on_demand
+        startsAt: *id010
+        endsAt: *id010
+        generatedAt: *id011
+        state:
+          type: string
+          enum:
+          - queued
+          - running
+          - complete
+          - failed
+        coveragePercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - environment
+      - kind
+      - startsAt
+      - endsAt
+      - generatedAt
+      - state
+      - coveragePercent
+      - version
+    ReportRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id014
+        kind:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - on_demand
+        startsAt: *id010
+        endsAt: *id010
+      required:
+      - environment
+      - kind
+      - startsAt
+      - endsAt
+    Alert:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        assetId: *id001
+        environment: *id014
+        ruleId: *id001
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+        state:
+          type: string
+          enum:
+          - pending
+          - firing
+          - resolved
+        evidenceQuality: *id015
+        triggeredAt: *id011
+        resolvedAt: *id011
+        acknowledgedAt: *id011
+        silencedUntil: *id011
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - assetId
+      - environment
+      - ruleId
+      - severity
+      - state
+      - evidenceQuality
+      - triggeredAt
+      - resolvedAt
+      - acknowledgedAt
+      - silencedUntil
+      - version
+    SilenceInput:
+      type: object
+      additionalProperties: false
+      properties:
+        reason:
+          type: string
+          maxLength: 500
+          minLength: 1
+        until: *id010
+      required:
+      - reason
+      - until
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        actorId:
+          type: string
+          format: uuid
+          nullable: true
+        environment: *id014
+        action:
+          type: string
+          maxLength: 100
+        targetId: *id001
+        occurredAt: *id010
+        requestId: *id001
+      required:
+      - id
+      - actorId
+      - environment
+      - action
+      - targetId
+      - occurredAt
+      - requestId
+    User:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        email:
+          type: string
+          maxLength: 254
+          format: email
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+            - admin
+            - operator
+            - viewer
+          maxItems: 100
+        environments:
+          type: array
+          items: *id014
+          maxItems: 3
+        publisher:
+          type: boolean
+      required:
+      - id
+      - email
+      - roles
+      - environments
+      - publisher
+    PublicComponentPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicComponent'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    PublicHistoryBucketPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicHistoryBucket'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    PublicIncidentPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicIncident'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    PublicMaintenancePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicMaintenance'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    AssetPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    MetricPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metric'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    IntegrationPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Integration'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    IncidentPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    MaintenancePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Maintenance'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    QARunPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QARun'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    FindingReferencePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FindingReference'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    ReportPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Report'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    AlertPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    AuditEventPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEvent'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor

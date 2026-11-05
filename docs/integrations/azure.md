@@ -1,0 +1,9 @@
+# Azure and Cosmos: manual until cost proven
+
+Azure [cost documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/cost-usage) distinguishes free collection of standard platform metrics from potentially charged REST retrieval. Therefore automated Azure polling is **disabled by default**. The previous five-minute adapter requirement is superseded. No paid API, diagnostic export or new feature is authorized.
+
+MVP fallback: authorized staff enter or import selected existing observations (e.g. Cosmos RU, requests/429s/latency), with source reference, real observation time, unit/aggregation, actor and manual provenance. Do not claim the manual evidence was authenticated directly with Azure. Avoid creating a new billable export to supply the CSV.
+
+If zero incremental retrieval cost is later demonstrated under the actual account, review resource-scoped Azure Monitor metrics REST before adding a minimal adapter. [REST documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/rest-api-walkthrough) distinguishes resource permissions from broader subscription-level multi-resource access. Use purpose-specific resource read permissions; no Cosmos data keys/Contributor or production database access. Pin a supported API version after authorization. Batch SDK adoption is not a required dependency.
+
+Verify Cosmos API type, descriptors, aggregation and dimensions using approved existing evidence; [metric reference](https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-reference). RU pressure or 429 ratio is not proof of outage. No “free platform metric” assumption permits API reads. Optional approved cadence would be >=15m with strict request bounds and expiry of cost approval. Tests include disabled-no-request, cost change, scope/429/timeouts, null denominators and manual/automatic separation.

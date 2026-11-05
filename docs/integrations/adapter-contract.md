@@ -1,0 +1,11 @@
+# Lean read adapter contract
+
+A small server module exposes describeCapabilities and collect for reviewed fixed provider operations. No framework-wide dynamic discovery engine or background scheduler is needed. Credential or connection “validation” that issues API requests must pass the same cost gate as collection; never spend to prove that spending is free.
+
+Inputs: integration/environment, approved service/resource mappings, bounded time window, metric allowlist, credential reference, abort signal and remaining request/series budget. Output: numeric observations with provider/name/unit/aggregation/dimensions, observed/collected timestamps and quality; capability errors remain distinct from missing values. Only job runtime resolves provider secrets. The web uses safe configuration metadata and stored readings.
+
+Before each request, check enabled, current permission/cost approval, known price, shared-account allowance evidence and a local worst-case reservation (requests × maximum returned series, including pages/retries). Debit conservatively on ambiguous outcomes. Never issue unbounded dimension queries to learn cardinality. If the provider cannot bound response cost or headroom is unknown, collection remains disabled. Daily/monthly counters are small fields in integration settings/run records, not a separate billing service.
+
+Fixed HTTPS API hosts, strict TLS, reviewed read operation allowlist, no redirects; validate resource IDs and schema/units. Do not assume GET means harmless or a free metric means free retrieval. No cloud writes, API/agent/export enablement, alert policy changes or privileged Firebase Admin SDK. Unsupported capability produces a reason, not zero. Retry at most once for transient errors inside overall job/request budgets; auth failure disables affected requests until reviewed. No long backoff sleep/catch-up queue.
+
+Test fixtures: valid/empty/partial/late/duplicate data, unit and counter reset, 401/403/429/timeouts, unexpected fields/cardinality, cost approval expiry, concurrent reservation, exhausted/shared unknown allowance. Assert no request is sent when cost/permission is unverified and no secrets in logs. Live reads occur only after separate target, permission and cost authorization.

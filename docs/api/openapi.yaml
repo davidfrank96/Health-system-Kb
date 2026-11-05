@@ -1,0 +1,4303 @@
+openapi: 3.0.3
+info:
+  title: Kbean internal health lean MVP proposed API
+  version: 0.2.0-planning
+  description: All operations UNIMPLEMENTED. Internal-only operational content. One web service and finite 15-minute
+    job; no public publishing or background queue.
+servers:
+- url: https://health.example.invalid
+  description: Documentation placeholder only
+security:
+- SessionCookie: []
+paths:
+  /api/v1/me:
+    get:
+      operationId: getCurrentUser
+      summary: getCurrentUser
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters: []
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: &id001
+                type: string
+                format: uuid
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/services:
+    get:
+      operationId: listServices
+      summary: listServices
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServicePage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      operationId: createService
+      summary: createService
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInput'
+  /api/v1/services/{id}:
+    get:
+      operationId: getService
+      summary: getService
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    patch:
+      operationId: updateService
+      summary: updateService
+      description: UNIMPLEMENTED. Environment is immutable; authorized scope derived from stored service.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInput'
+  /api/v1/endpoints:
+    get:
+      operationId: listEndpoints
+      summary: listEndpoints
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndpointPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      operationId: createEndpoint
+      summary: createEndpoint
+      description: UNIMPLEMENTED. Disabled by default; enable requires stored owner approval and approved safe URL.
+        No request is sent by this API.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointInput'
+  /api/v1/endpoints/{id}:
+    patch:
+      operationId: updateEndpoint
+      summary: updateEndpoint
+      description: UNIMPLEMENTED. Scope immutable. URL change invalidates approval. Safe URL/approval checks required;
+        no immediate probe.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointInput'
+  /api/v1/status/overview:
+    get:
+      operationId: getPrivateStatus
+      summary: getPrivateStatus
+      description: UNIMPLEMENTED. Staff-only, no-store. Sampled status; no anonymous publication.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusOverview'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/status/history:
+    get:
+      operationId: getSampledHistory
+      summary: getSampledHistory
+      description: UNIMPLEMENTED. Daily summary, <=366 days, always labeled 15-minute sampled availability.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistoryDayPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/health-checks:
+    get:
+      operationId: listHealthChecks
+      summary: listHealthChecks
+      description: UNIMPLEMENTED. Raw history <=30d. No backfilled synthetic checks.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProbeResultPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/downtime-events:
+    get:
+      operationId: listObservedDowntime
+      summary: listObservedDowntime
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DowntimeEventPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/metrics/latest:
+    get:
+      operationId: getMetricsLatest
+      summary: getMetricsLatest
+      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation age; longer
+        trends use daily reports.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Metric'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricSnapshotPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/metrics/history:
+    get:
+      operationId: getMetricsHistory
+      summary: getMetricsHistory
+      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation age; longer
+        trends use daily reports.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/Metric'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricSnapshotPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/metrics/snapshots:
+    post:
+      operationId: enterManualSnapshot
+      summary: enterManualSnapshot
+      description: UNIMPLEMENTED. Always sourceMethod manual, server actor/time; observedAt within past 30d, no
+        future >2m. Cannot alter health checks.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricSnapshot'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricInput'
+  /api/v1/metrics/imports:
+    post:
+      operationId: importMetricCSV
+      summary: importMetricCSV
+      description: UNIMPLEMENTED. UTF-8 CSV <=256 KiB/500 rows. Preview dryRun=true has no writes; dryRun=false
+        requires same normalized X-Preview-Digest. Entire batch atomic. See manual-imports.md.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      - name: dryRun
+        in: query
+        required: true
+        schema:
+          type: boolean
+      - name: X-Preview-Digest
+        in: header
+        required: false
+        schema: &id008
+          type: string
+          maxLength: 64
+          pattern: ^[a-f0-9]{64}$
+        description: Required when dryRun=false; compare normalized content and authorization again.
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+              maxLength: 262144
+  /api/v1/integrations:
+    get:
+      operationId: listIntegrations
+      summary: listIntegrations
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/integrations/{id}:
+    patch:
+      operationId: updateIntegration
+      summary: updateIntegration
+      description: UNIMPLEMENTED. No secret values. Enable only if stored current permission AND verified_no_incremental_cost
+        evidence and bounded allowance exist. Client cannot self-assert costStatus. No live validation request.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationUpdate'
+  /api/v1/incidents:
+    get:
+      operationId: listIncidents
+      summary: listIncidents
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      operationId: createIncident
+      summary: createIncident
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentInput'
+  /api/v1/incidents/{id}/updates:
+    post:
+      operationId: updateIncident
+      summary: updateIncident
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Incident'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdateInput'
+  /api/v1/maintenance:
+    get:
+      operationId: listMaintenance
+      summary: listMaintenance
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenancePage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      operationId: createMaintenance
+      summary: createMaintenance
+      description: UNIMPLEMENTED. Approved service-scoped interval; start<end; authenticated only.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceInput'
+  /api/v1/maintenance/{id}:
+    patch:
+      operationId: updateMaintenance
+      summary: updateMaintenance
+      description: UNIMPLEMENTED. Scope immutable; audited update/recomputation within retained evidence. End may
+        be shortened to cancel remaining future window.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/IfMatch'
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Maintenance'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceInput'
+  /api/v1/qa/runs:
+    get:
+      operationId: listQARuns
+      summary: listQARuns
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARunPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/qa/imports:
+    post:
+      operationId: importManualQA
+      summary: importManualQA
+      description: UNIMPLEMENTED. Manual provenance. Same run/digest deduplicates, conflicting terminal result returns
+        409.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/Key'
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARun'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QAManualInput'
+  /api/v1/webhooks/qa/runs:
+    post:
+      operationId: receiveSignedQARun
+      summary: receiveSignedQARun
+      description: UNIMPLEMENTED. <=128 KiB. Synchronous validated DB commit, no async queue. HMAC ±300s over timestamp.eventId.rawBody;
+        key binds service/env. Duplicate returns 200.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters:
+      - name: X-Kbean-Key-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          maxLength: 100
+      - name: X-Kbean-Timestamp
+        in: header
+        required: true
+        schema:
+          type: string
+          maxLength: 20
+          pattern: ^[0-9]+$
+      - name: X-Kbean-Event-Id
+        in: header
+        required: true
+        schema: *id001
+      responses:
+        '201':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARun'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '200':
+          description: Existing identical committed run; no new records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARun'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QARunInput'
+      security:
+      - QASignature: []
+  /api/v1/security/findings:
+    get:
+      operationId: listQASecurityReferences
+      summary: listQASecurityReferences
+      description: UNIMPLEMENTED. Authorized references from scoped QA summaries; no separate SIEM dataset.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindingReferencePage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/reports/summary:
+    get:
+      operationId: getReportSummary
+      summary: getReportSummary
+      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance shown.
+        No report queue/service. Export is audited and safely escaped.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - name: kind
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - qa
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/reports/export:
+    get:
+      operationId: getReportExport
+      summary: getReportExport
+      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance shown.
+        No report queue/service. Export is audited and safely escaped.
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Start'
+      - $ref: '#/components/parameters/End'
+      - name: kind
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - qa
+      responses:
+        '200':
+          description: Private CSV attachment; no-store; include source/time/coverage and formula protection.
+          content:
+            text/csv:
+              schema:
+                type: string
+                maxLength: 1048576
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/audit-events:
+    get:
+      operationId: listAuditEvents
+      summary: listAuditEvents
+      description: 'UNIMPLEMENTED. '
+      x-implementation-status: unimplemented
+      x-required-roles:
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditEventPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /health/live:
+    get:
+      operationId: getLive
+      summary: getLive
+      description: UNIMPLEMENTED. Minimal platform health only. No service data. Readiness uses bounded local critical
+        dependency check, not paid/provider calls.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters: []
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security: []
+  /health/ready:
+    get:
+      operationId: getReady
+      summary: getReady
+      description: UNIMPLEMENTED. Minimal platform health only. No service data. Readiness uses bounded local critical
+        dependency check, not paid/provider calls.
+      x-implementation-status: unimplemented
+      x-required-roles: []
+      parameters: []
+      responses:
+        '200':
+          description: Proposed successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security: []
+components:
+  securitySchemes:
+    SessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-kbean_session
+    QASignature:
+      type: apiKey
+      in: header
+      name: X-Kbean-Signature
+      description: HMAC-SHA256 over timestamp.eventId.rawBody; sender scoped to service/environment; see QA design.
+  parameters:
+    Environment:
+      name: environment
+      in: query
+      required: true
+      schema: &id003
+        type: string
+        enum: &id010
+        - production
+        - staging
+        - development
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: *id001
+    ServiceId:
+      name: serviceId
+      in: query
+      required: true
+      schema: *id001
+    Start:
+      name: start
+      in: query
+      required: true
+      schema: &id002
+        type: string
+        format: date-time
+    End:
+      name: end
+      in: query
+      required: true
+      schema: *id002
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+        maxLength: 512
+    Csrf:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 256
+    Key:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 128
+        minLength: 16
+      description: Actor/route scoped, retained at least 24h; changed body conflicts. Import/QA identities persist
+        for their record retention.
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        maxLength: 80
+      description: Quoted current revision. Concurrent change returns 409.
+    Metric:
+      name: metricName
+      in: query
+      required: true
+      schema: &id005
+        type: string
+        maxLength: 100
+  schemas:
+    Problem:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        code:
+          type: string
+          maxLength: 80
+        title:
+          type: string
+          maxLength: 200
+        requestId: *id001
+        detail:
+          type: string
+          maxLength: 500
+      required:
+      - status
+      - code
+      - title
+      - requestId
+    HealthCheck:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - ok
+          - unavailable
+      required:
+      - status
+    User:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        email:
+          type: string
+          maxLength: 254
+          format: email
+        memberships:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              environment: *id003
+              role:
+                type: string
+                enum:
+                - viewer
+                - operator
+                - admin
+            required:
+            - environment
+            - role
+          maxItems: 3
+      required:
+      - id
+      - email
+      - memberships
+    Freshness:
+      type: object
+      additionalProperties: false
+      properties:
+        quality: &id007
+          type: string
+          enum:
+          - fresh
+          - stale
+          - missing
+          - partial
+          - error
+          - unsupported
+        observedAt: &id004
+          type: string
+          format: date-time
+          nullable: true
+        collectedAt: *id004
+        ageSeconds:
+          type: number
+          minimum: 0
+          nullable: true
+        staleAfterSeconds:
+          type: integer
+          minimum: 1
+      required:
+      - quality
+      - observedAt
+      - collectedAt
+      - ageSeconds
+      - staleAfterSeconds
+    Availability:
+      type: object
+      additionalProperties: false
+      properties:
+        start: *id002
+        end: *id002
+        intervalSeconds:
+          type: integer
+          enum:
+          - 900
+        method:
+          type: string
+          enum:
+          - scheduled-samples-v1
+        eligibleSlots:
+          type: integer
+          minimum: 0
+        successSlots:
+          type: integer
+          minimum: 0
+        failureSlots:
+          type: integer
+          minimum: 0
+        unknownSlots:
+          type: integer
+          minimum: 0
+        maintenanceSlots:
+          type: integer
+          minimum: 0
+        notMonitoredSlots:
+          type: integer
+          minimum: 0
+        coveragePercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        observedSampleAvailabilityPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        sampleLowerBoundPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        sampleUpperBoundPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          nullable: true
+        sufficientCoverage:
+          type: boolean
+        nullReason:
+          type: string
+          maxLength: 200
+          nullable: true
+      required:
+      - start
+      - end
+      - intervalSeconds
+      - method
+      - eligibleSlots
+      - successSlots
+      - failureSlots
+      - unknownSlots
+      - maintenanceSlots
+      - notMonitoredSlots
+      - coveragePercent
+      - observedSampleAvailabilityPercent
+      - sampleLowerBoundPercent
+      - sampleUpperBoundPercent
+      - sufficientCoverage
+      - nullReason
+    ServiceInput:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 1
+        product:
+          type: string
+          maxLength: 120
+        environment: *id003
+        owner:
+          type: string
+          maxLength: 120
+        criticality:
+          type: string
+          enum:
+          - critical
+          - high
+          - normal
+          - low
+        evidenceReference:
+          type: string
+          maxLength: 500
+      required:
+      - name
+      - product
+      - environment
+      - owner
+      - criticality
+      - evidenceReference
+    Service:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        name:
+          type: string
+          maxLength: 120
+        product:
+          type: string
+          maxLength: 120
+        environment: *id003
+        owner:
+          type: string
+          maxLength: 120
+        verification:
+          type: string
+          enum:
+          - unverified
+          - verified
+          - approved
+        condition:
+          type: string
+          enum:
+          - healthy
+          - degraded
+          - down
+          - maintenance
+          - unknown
+        freshness:
+          $ref: '#/components/schemas/Freshness'
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - name
+      - product
+      - environment
+      - owner
+      - verification
+      - condition
+      - freshness
+      - version
+    EndpointInput:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceId: *id001
+        environment: *id003
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+          pattern: ^https://
+        expectedStatusCodes:
+          type: array
+          items:
+            type: integer
+            minimum: 100
+            maximum: 599
+          maxItems: 10
+        required:
+          type: boolean
+        enabled:
+          type: boolean
+          default: false
+        approvalReference:
+          type: string
+          maxLength: 500
+      required:
+      - serviceId
+      - environment
+      - url
+      - expectedStatusCodes
+      - required
+      - enabled
+    Endpoint:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        serviceId: *id001
+        environment: *id003
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+        enabled:
+          type: boolean
+        intervalSeconds:
+          type: integer
+          enum:
+          - 900
+        lastCheckedAt: *id004
+        lastSuccessAt: *id004
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - serviceId
+      - environment
+      - url
+      - enabled
+      - intervalSeconds
+      - lastCheckedAt
+      - lastSuccessAt
+      - version
+    StatusOverview:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id003
+        generatedAt: *id002
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+          maxItems: 20
+        lastCollectionAt: *id004
+        activeIncidentCount:
+          type: integer
+          minimum: 0
+        disabledIntegrationCount:
+          type: integer
+          minimum: 0
+        samplingNotice:
+          type: string
+          enum:
+          - Sampled every 15 minutes; short outages may be missed.
+      required:
+      - environment
+      - generatedAt
+      - services
+      - lastCollectionAt
+      - activeIncidentCount
+      - disabledIntegrationCount
+      - samplingNotice
+    HistoryDay:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceId: *id001
+        date:
+          type: string
+          format: date
+        availability:
+          $ref: '#/components/schemas/Availability'
+      required:
+      - serviceId
+      - date
+      - availability
+    ProbeResult:
+      type: object
+      additionalProperties: false
+      properties:
+        endpointId: *id001
+        serviceId: *id001
+        environment: *id003
+        scheduledSlot: *id002
+        observedAt: *id004
+        collectedAt: *id002
+        outcome:
+          type: string
+          enum:
+          - success
+          - failure
+          - unknown
+        httpStatus:
+          type: integer
+          minimum: 100
+          maximum: 599
+          nullable: true
+        latencyMs:
+          type: number
+          minimum: 0
+          nullable: true
+        attempts:
+          type: integer
+          minimum: 0
+          maximum: 2
+        errorCode:
+          type: string
+          maxLength: 80
+          nullable: true
+      required:
+      - endpointId
+      - serviceId
+      - environment
+      - scheduledSlot
+      - observedAt
+      - collectedAt
+      - outcome
+      - httpStatus
+      - latencyMs
+      - attempts
+      - errorCode
+    DowntimeEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        endpointId: *id001
+        environment: *id003
+        firstFailedAt: *id002
+        confirmedAt: *id002
+        firstRecoveryAt: *id004
+        resolvedAt: *id004
+        hasEvidenceGaps:
+          type: boolean
+        method:
+          type: string
+          enum:
+          - sampled-observations
+      required:
+      - id
+      - endpointId
+      - environment
+      - firstFailedAt
+      - confirmedAt
+      - firstRecoveryAt
+      - resolvedAt
+      - hasEvidenceGaps
+      - method
+    MetricInput:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceId: *id001
+        environment: *id003
+        provider:
+          type: string
+          maxLength: 50
+        metricName: *id005
+        unit: &id006
+          type: string
+          maxLength: 50
+        aggregation:
+          type: string
+          enum:
+          - sum
+          - mean
+          - min
+          - max
+          - count
+          - rate
+          - percentile
+        value:
+          type: number
+        observedAt: *id002
+        sourceReference:
+          type: string
+          maxLength: 500
+          minLength: 1
+        note:
+          type: string
+          maxLength: 1000
+        supersedesId: *id001
+        correctionReason:
+          type: string
+          maxLength: 500
+      required:
+      - serviceId
+      - environment
+      - provider
+      - metricName
+      - unit
+      - aggregation
+      - value
+      - observedAt
+      - sourceReference
+      - note
+    MetricSnapshot:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        serviceId: *id001
+        environment: *id003
+        provider:
+          type: string
+          maxLength: 50
+        metricName: *id005
+        unit: *id006
+        aggregation:
+          type: string
+          maxLength: 40
+        value:
+          type: number
+          nullable: true
+        observedAt: *id002
+        collectedAt: *id002
+        ingestedAt: *id002
+        sourceMethod:
+          type: string
+          enum:
+          - provider_api
+          - manual
+          - csv
+        sourceReference:
+          type: string
+          maxLength: 500
+        enteredBy:
+          type: string
+          format: uuid
+          nullable: true
+        quality: *id007
+      required:
+      - id
+      - serviceId
+      - environment
+      - provider
+      - metricName
+      - unit
+      - aggregation
+      - value
+      - observedAt
+      - collectedAt
+      - ingestedAt
+      - sourceMethod
+      - sourceReference
+      - enteredBy
+      - quality
+    ImportResult:
+      type: object
+      additionalProperties: false
+      properties:
+        dryRun:
+          type: boolean
+        digest: *id008
+        validRows:
+          type: integer
+          minimum: 0
+          maximum: 500
+        invalidRows:
+          type: integer
+          minimum: 0
+          maximum: 500
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              row:
+                type: integer
+                minimum: 1
+              code:
+                type: string
+                maxLength: 80
+              message:
+                type: string
+                maxLength: 200
+            required:
+            - row
+            - code
+            - message
+          maxItems: 50
+        batchId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - dryRun
+      - digest
+      - validRows
+      - invalidRows
+      - errors
+      - batchId
+    Integration:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        provider:
+          type: string
+          maxLength: 50
+        environment: *id003
+        mode:
+          type: string
+          enum:
+          - disabled
+          - api
+          - webhook
+          - manual
+        enabled:
+          type: boolean
+        costStatus:
+          type: string
+          enum:
+          - unverified
+          - verified_no_incremental_cost
+          - blocked
+        approvalExpiresAt: *id004
+        lastSuccessAt: *id004
+        disabledReason:
+          type: string
+          maxLength: 500
+          nullable: true
+        remainingUsageUnits:
+          type: integer
+          minimum: 0
+          nullable: true
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - provider
+      - environment
+      - mode
+      - enabled
+      - costStatus
+      - approvalExpiresAt
+      - lastSuccessAt
+      - disabledReason
+      - remainingUsageUnits
+      - version
+    IntegrationUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        enabled:
+          type: boolean
+        approvalReference:
+          type: string
+          maxLength: 500
+        permissionEvidenceReference:
+          type: string
+          maxLength: 500
+      required:
+      - enabled
+    IncidentInput:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceId:
+          type: string
+          format: uuid
+          nullable: true
+        environment: *id003
+        title:
+          type: string
+          maxLength: 200
+          minLength: 1
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+        startedAt: *id002
+        message:
+          type: string
+          maxLength: 4000
+      required:
+      - serviceId
+      - environment
+      - title
+      - severity
+      - startedAt
+      - message
+    Incident:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        serviceId:
+          type: string
+          format: uuid
+          nullable: true
+        environment: *id003
+        title:
+          type: string
+          maxLength: 200
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+        status: &id009
+          type: string
+          enum:
+          - investigating
+          - identified
+          - monitoring
+          - resolved
+        startedAt: *id002
+        resolvedAt: *id004
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - serviceId
+      - environment
+      - title
+      - severity
+      - status
+      - startedAt
+      - resolvedAt
+      - version
+    IncidentUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        status: *id009
+        message:
+          type: string
+          maxLength: 4000
+          minLength: 1
+        occurredAt: *id002
+      required:
+      - status
+      - message
+      - occurredAt
+    MaintenanceInput:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceId: *id001
+        environment: *id003
+        title:
+          type: string
+          maxLength: 200
+        reason:
+          type: string
+          maxLength: 1000
+        startsAt: *id002
+        endsAt: *id002
+      required:
+      - serviceId
+      - environment
+      - title
+      - reason
+      - startsAt
+      - endsAt
+    Maintenance:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        serviceId: *id001
+        environment: *id003
+        title:
+          type: string
+          maxLength: 200
+        startsAt: *id002
+        endsAt: *id002
+        version:
+          type: integer
+          minimum: 1
+      required:
+      - id
+      - serviceId
+      - environment
+      - title
+      - startsAt
+      - endsAt
+      - version
+    Counts:
+      type: object
+      additionalProperties: false
+      properties:
+        passed:
+          type: integer
+          minimum: 0
+        failed:
+          type: integer
+          minimum: 0
+        skipped:
+          type: integer
+          minimum: 0
+        flaky:
+          type: integer
+          minimum: 0
+      required:
+      - passed
+      - failed
+      - skipped
+      - flaky
+    Evidence:
+      type: object
+      additionalProperties: false
+      properties:
+        label:
+          type: string
+          maxLength: 200
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+          pattern: ^https://
+      required:
+      - label
+      - url
+    FindingReference:
+      type: object
+      additionalProperties: false
+      properties:
+        source:
+          type: string
+          maxLength: 100
+        externalId:
+          type: string
+          maxLength: 200
+        severity:
+          type: string
+          enum:
+          - critical
+          - high
+          - medium
+          - low
+          - unknown
+        title:
+          type: string
+          maxLength: 200
+        url:
+          type: string
+          maxLength: 2048
+          format: uri
+          pattern: ^https://
+      required:
+      - source
+      - externalId
+      - severity
+      - title
+      - url
+    QARunInput:
+      type: object
+      additionalProperties: false
+      properties:
+        schemaVersion:
+          type: string
+          enum:
+          - '1'
+        sourceRunId:
+          type: string
+          maxLength: 200
+          minLength: 1
+        serviceId: *id001
+        environment: *id003
+        suiteName:
+          type: string
+          maxLength: 200
+        startedAt: *id002
+        completedAt: *id002
+        durationMs:
+          type: integer
+          minimum: 0
+        status:
+          type: string
+          enum:
+          - passed
+          - failed
+          - error
+          - cancelled
+        counts:
+          $ref: '#/components/schemas/Counts'
+        failures:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              testName:
+                type: string
+                maxLength: 200
+              summary:
+                type: string
+                maxLength: 1000
+            required:
+            - testName
+            - summary
+          maxItems: 20
+        evidence:
+          type: array
+          items:
+            $ref: '#/components/schemas/Evidence'
+          maxItems: 10
+        securityFindings:
+          type: array
+          items:
+            $ref: '#/components/schemas/FindingReference'
+          maxItems: 20
+        applicationVersion:
+          type: string
+          maxLength: 100
+      required:
+      - schemaVersion
+      - sourceRunId
+      - serviceId
+      - environment
+      - suiteName
+      - startedAt
+      - completedAt
+      - durationMs
+      - status
+      - counts
+      - failures
+      - evidence
+      - securityFindings
+    QARun:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        receivedAt: *id002
+        sourceMethod:
+          type: string
+          enum:
+          - webhook
+          - api
+          - manual
+        sourceReference:
+          type: string
+          maxLength: 500
+        enteredBy:
+          type: string
+          format: uuid
+          nullable: true
+        run:
+          $ref: '#/components/schemas/QARunInput'
+      required:
+      - id
+      - receivedAt
+      - sourceMethod
+      - sourceReference
+      - enteredBy
+      - run
+    QAManualInput:
+      type: object
+      additionalProperties: false
+      properties:
+        sourceReference:
+          type: string
+          maxLength: 500
+          minLength: 1
+        run:
+          $ref: '#/components/schemas/QARunInput'
+      required:
+      - sourceReference
+      - run
+    Report:
+      type: object
+      additionalProperties: false
+      properties:
+        environment: *id003
+        kind:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          - qa
+        start: *id002
+        end: *id002
+        generatedAt: *id002
+        calculationVersion:
+          type: string
+          enum:
+          - lean-v1
+        availability:
+          $ref: '#/components/schemas/Availability'
+        manualSnapshotCount:
+          type: integer
+          minimum: 0
+        sections:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              title:
+                type: string
+                maxLength: 200
+              text:
+                type: string
+                maxLength: 5000
+            required:
+            - title
+            - text
+          maxItems: 30
+      required:
+      - environment
+      - kind
+      - start
+      - end
+      - generatedAt
+      - calculationVersion
+      - availability
+      - manualSnapshotCount
+      - sections
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        actorId:
+          type: string
+          format: uuid
+          nullable: true
+        environment:
+          type: string
+          enum: *id010
+          nullable: true
+        action:
+          type: string
+          maxLength: 100
+        targetId:
+          type: string
+          format: uuid
+          nullable: true
+        occurredAt: *id002
+        requestId: *id001
+      required:
+      - id
+      - actorId
+      - environment
+      - action
+      - targetId
+      - occurredAt
+      - requestId
+    ServicePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    EndpointPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    HistoryDayPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryDay'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    ProbeResultPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProbeResult'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    DowntimeEventPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DowntimeEvent'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    MetricSnapshotPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricSnapshot'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    IntegrationPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Integration'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    IncidentPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    MaintenancePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Maintenance'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    QARunPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QARun'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    FindingReferencePage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FindingReference'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
+    AuditEventPage:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEvent'
+          maxItems: 100
+        nextCursor:
+          type: string
+          maxLength: 512
+          nullable: true
+      required:
+      - items
+      - nextCursor
