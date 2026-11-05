@@ -1,6 +1,6 @@
 # Lean implementation backlog
 
-All work below is planned, not authorized. The minimum useful path is staff login/inventory → sampled HTTPS availability → free/manual infrastructure → existing QA/incidents/reports → verified release. Original dates remain targets in PLANS. No removed component is a dependency.
+L01-1 through L01-5 are implemented locally. See the Phase 01 report for executed checks, pending hosted CI and the owner review gate. The minimum useful path is staff login/inventory → sampled HTTPS availability → free/manual infrastructure → existing QA/incidents/reports → verified release. Original dates remain targets in PLANS. No removed component is a dependency.
 
 | ID / phase | Deliverable | Dependencies | Acceptance evidence |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@ All work below is planned, not authorized. The minimum useful path is staff logi
 | L01-2 / 01 | Local PostgreSQL identity/service/inventory migrations | L01-1 | Real DB constraints/grants/upgrade/restore tests |
 | L01-3 / 01 | Google OIDC allowlist, sessions, env RBAC, CSRF | L01-2, identity owner | Unapproved identity/role/env denied, logout/revocation tested |
 | L01-4 / 01 | Inventory settings/basic private overview and safe API conventions | L01-3 | All private routes, honest empty states, no live collector |
-| L01-5 / 01 | Local CI/dependency/secret/test checks | L01-1–4 | No production secrets in untrusted builds; documented results |
+| L01-5 / 01 | Local CI/dependency/secret/test checks | Harness from the first milestone; feature suites alongside L01-1–4 | Local evidence and prepared PR workflow in the Phase 01 report; hosted run pending |
 | L02-1 / 02 | Approved HTTPS executor + finite job entrypoint | 01, target approval | DNS/IP/redirect/TLS/timeout/size/retry fixtures; no private addresses |
 | L02-2 / 02 | Run lock/slot dedupe, check persistence and gap states | L02-1 | Overlap/crash/lost-lock/idempotency; no catch-up requests |
 | L02-3 / 02 | Sample history/last-success/downtime/recovery/daily counts | L02-2 | Two-slot confirmation, unknown/maintenance/missing arithmetic |

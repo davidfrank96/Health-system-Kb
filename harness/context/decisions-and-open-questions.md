@@ -15,8 +15,8 @@
 | L09 | Temporary remote test/managed restore reason, resources, hours, max cost and cleanup owner | Infrastructure/budget | Each temporary test; no permanent staging |
 | L10 | Single web/DB/provider risk and no independent failure alert while system is down | Product/operations | Release acceptance; no new paid checker |
 | L11 | Repo privacy/ownership, Apache license intent, CI allowance and existing domain | Repository/budget | Release/procurement; existing name/license retained |
-| L12 | Explicit revised Phase 01 local implementation scope | Project owner | Any implementation; not granted by architecture revision |
-| L13 | Exact provision/deploy/commit/push authorization | Project/infrastructure owner | Each external/repository mutation; none granted now |
+| L12 | Explicit revised Phase 01 local implementation scope | Project owner | Local foundation, native PostgreSQL and automated tests authorized 5 November; stop at review |
+| L13 | Exact provision/deploy/commit/push authorization | Project/infrastructure owner | Phase 00 publish completed; separate authority for further mutations |
 
 ## Risks and limits
 
@@ -28,4 +28,8 @@
 - Small plans may be insufficient: measure, reduce optional work visibly or request approval; no auto-upgrade (L04/L07).
 - Restore/temporary-test costs can exceed the small reserve: require specific approval; do not skip required recovery proof to conceal cost (L09).
 
-No production risk has been formally accepted and no implementation/deployment/push is approved. Inventory, identity and final budget approval are necessary before Phase 01; optional provider sources can remain disabled without blocking core availability.
+No production risk has been formally accepted and the quality addendum covers local verification tooling only. Inventory, identity and final budget approval are necessary before Phase 01; optional provider sources can remain disabled without blocking core availability.
+
+On 5 November 2026 the project owner authorized local Phase 01 engineering-quality work against published baseline `74fa0f1`: test dependencies, disposable DB/browser fixtures, PR workflow preparation and milestone/phase reporting. Hosted CI usage, product rollout and external infrastructure changes require their applicable gates.
+
+Subsequent owner decision, 5 November: L12 covers the Phase 01 application, a local development branch and native PostgreSQL development/testing. The later native decision supersedes the interim managed-only direction. Existing PostgreSQL 18 binaries were reused; Postgres.app is the preferred macOS installation. No commit, push, merge, provisioning, external database connection, deployment or Phase 02 is authorized.

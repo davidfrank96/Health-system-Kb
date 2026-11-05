@@ -1,5 +1,9 @@
 # Changelog
 
+## Phase 01 · local foundation
+
+Implemented the seven-section internal dashboard, OIDC sessions and environment RBAC, service inventory, native PostgreSQL 18 development/test workflows, migrations and disabled job entry point. Added local and PR verification. [Phase acceptance report](docs/reports/phase-01-report.md).
+
 ## Unreleased — lean Phase 00 revision, 31 October 2026
 
 - Replaced active larger/public architecture with one internal web app, small single-node PostgreSQL and finite 15-minute job.

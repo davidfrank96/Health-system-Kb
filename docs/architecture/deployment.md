@@ -18,7 +18,7 @@ The app is authenticated, not necessarily reachable only on a private network. A
 
 ## Development and temporary staging
 
-Local PostgreSQL and mocked providers are the default integration/functional/performance/security environment. Distinguish deployment environment (local/test/production) from monitored service environment (production/staging/development). Local fixtures cannot reach production targets/credentials. Temporary DO staging requires an explicit reason, separate DB/credentials, safe targets, itemized cost, owner and automatic/manual teardown deadline; it does not run continuously and cannot become a silent baseline expense.
+Native PostgreSQL 18 and mocked providers are the development/test environment. Postgres.app is preferred on macOS. The CI service uses the same major version. Current connection validation accepts only Unix sockets and literal loopback. Use the [local database guide](../database/local-development.md) for native setup and test reset. Distinguish deployment environment (local/test/production) from monitored service environment (production/staging/development). Local fixtures cannot reach production targets/credentials. Temporary DO staging requires an explicit reason, separate DB/credentials, safe targets, itemized cost, owner and automatic/manual teardown deadline; it does not run continuously and cannot become a silent baseline expense.
 
 ## Backups, release and recovery
 

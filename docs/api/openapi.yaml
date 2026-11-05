@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: Kbean internal health lean MVP proposed API
-  version: 0.2.0-planning
-  description: All operations UNIMPLEMENTED. Internal-only operational content. One web service and finite 15-minute
+  version: 0.3.0-foundation
+  description: Phase 01 implements staff identity, services and process probes. Other operations remain planned. Internal-only operational content. One web service and finite 15-minute
     job; no public publishing or background queue.
 servers:
 - url: https://health.example.invalid
@@ -14,8 +14,8 @@ paths:
     get:
       operationId: getCurrentUser
       summary: getCurrentUser
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: 'Implemented locally. '
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -23,12 +23,16 @@ paths:
       parameters: []
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
           headers:
+            X-CSRF-Token:
+              description: Session-bound proof for same-origin browser mutations
+              schema:
+                type: string
             X-Request-Id:
               description: Safe correlation ID
               schema: &id001
@@ -97,8 +101,8 @@ paths:
     get:
       operationId: listServices
       summary: listServices
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: 'Implemented locally. '
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -109,7 +113,7 @@ paths:
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -185,8 +189,8 @@ paths:
     post:
       operationId: createService
       summary: createService
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: 'Implemented locally. '
+      x-implementation-status: implemented-local
       x-required-roles:
       - admin
       parameters:
@@ -194,7 +198,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '201':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -277,8 +281,8 @@ paths:
     get:
       operationId: getService
       summary: getService
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: 'Implemented locally. '
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -288,7 +292,7 @@ paths:
       - $ref: '#/components/parameters/Environment'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -364,8 +368,8 @@ paths:
     patch:
       operationId: updateService
       summary: updateService
-      description: UNIMPLEMENTED. Environment is immutable; authorized scope derived from stored service.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Environment is immutable; authorized scope derived from stored service.
+      x-implementation-status: implemented-local
       x-required-roles:
       - admin
       parameters:
@@ -375,7 +379,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -2831,14 +2835,14 @@ paths:
     get:
       operationId: getLive
       summary: getLive
-      description: UNIMPLEMENTED. Minimal platform health only. No service data. Readiness uses bounded local critical
+      description: Implemented locally. Minimal platform health only. No service data. Readiness uses bounded local critical
         dependency check, not paid/provider calls.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles: []
       parameters: []
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -2911,14 +2915,14 @@ paths:
     get:
       operationId: getReady
       summary: getReady
-      description: UNIMPLEMENTED. Minimal platform health only. No service data. Readiness uses bounded local critical
+      description: Implemented locally. Minimal platform health only. No service data. Readiness uses bounded local critical
         dependency check, not paid/provider calls.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles: []
       parameters: []
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -3297,6 +3301,12 @@ components:
         owner:
           type: string
           maxLength: 120
+        criticality:
+          type: string
+          enum: [critical, high, normal, low]
+        evidenceReference:
+          type: string
+          maxLength: 500
         verification:
           type: string
           enum:
@@ -3322,6 +3332,8 @@ components:
       - product
       - environment
       - owner
+      - criticality
+      - evidenceReference
       - verification
       - condition
       - freshness

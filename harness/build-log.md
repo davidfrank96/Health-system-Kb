@@ -105,3 +105,30 @@ Placeholder added: `jobs/.gitkeep`. Obsolete empty placeholders removed:
 ## 5 November 2026 pre-push review
 
 Reviewed the Phase 00 files and existing Git history for credentials, environment files and internal infrastructure identifiers. Removed two environment-specific Firebase project identifiers from the active and historical documentation and refreshed the archive checksums. The two Gitleaks matches in the archive manifest were verified SHA-256 file checksums. GitHub reported the configured origin as public, so the private-repository push is pending.
+
+## 5 November 2026 — Phase 01 quality setup
+
+Phase 00 was subsequently pushed to the existing public repository with the owner's explicit instruction at `74fa0f1`. This entry records local work against that revision. The owner requested the engineering-quality addendum for Phases 01–05. At intake the repository had no executable application, migrations, tests or CI workflow.
+
+- Implemented the local part of L01-5: pinned pnpm tooling, TypeScript, Biome, Vitest, Playwright desktop/mobile, a disposable PostgreSQL launcher, security-contract regression tests and a bounded PR-only workflow. Updated active instructions, roadmap, phase plans, backlog, setup and acceptance rules. See the [milestone report](../docs/reports/phase-01-report.md).
+- Ran frozen install, typecheck, lint, unit/contract (35 passed), PostgreSQL integration (1 passed) and browser isolation (2 passed). An initial lint run suggested template literals; applied the suggestions and reran cleanly. Repeated the DB integration with conflicting parent connection settings. The fixture used its own database and stopped successfully.
+- Ran dependency audit, redacted Git history and working-change secret checks, Bash syntax, actionlint and local documentation checks. Local Playwright installation pruned an older cached WebKit build; restored that build and documented the cache-preserving install command.
+- Outstanding: hosted CI run and approved allowance, migrations/restore, product validation, login/session/RBAC/API tests and seven-section dashboard/inventory E2E. Issue an evidence update after each significant milestone. Changes are local; the Phase 01 acceptance gate is open.
+
+## Phase 01 foundation · database milestone · 5 November 2026
+
+Created phase-01/foundation at 74fa0f1 with the quality addendum working tree intact. Added transactional identity and inventory migrations, restricted web grants, membership revocation triggers and an offline staff approval script. Ran pnpm test:integration on PostgreSQL 18.3: three tests passed, including runtime permissions, case-insensitive names and cross-environment/disabled-target constraints. A populated v1 upgraded twice and restored into a second database with identity and migration history intact. Browser/auth checks pending.
+
+### Database policy reconciliation and identity milestone
+
+The previous isolation run used Homebrew PostgreSQL 18.3 through initdb/pg_ctl and a private Unix socket. The temporary managed-only direction stopped the next local run. The owner then explicitly selected native PostgreSQL for development and automated tests, with Postgres.app preferred on macOS. Implemented that final policy and removed the managed-host connection path. No DigitalOcean resource was contacted.
+
+On the native database, the real login callback issued opaque sessions for approved synthetic staff. Desktop tests passed for unapproved accounts, signature/nonce/email verification, logout replay, idle and absolute expiry and membership revocation. The first inventory browser run exposed stale list data after a successful create. Corrected the refresh dependency and added independent readback of the saved revision. Full regression follows.
+
+### Inventory, dashboard and Phase 01 gate · 5 November 2026
+
+Migrated the final setup to native PostgreSQL 18 and tested its two distinct lifecycles. The developer launcher used a persistent kbean_development DB and was stopped after a signed-in overview check. Native tests ran in a fresh kbean_test cluster with SCRAM, owner-only socket, restricted identities, automatic migrations, populated upgrade/replay and a dump restored into kbean_test_restore. No local Docker, cloud connection, production account or live provider was used. Prepared a PostgreSQL 18 GitHub Actions service and validated workflow syntax; hosted execution is pending.
+
+Ran pnpm typecheck, lint, frozen install, optimized build, test:unit (40), test:e2e (18), test:db (2 DB tests plus 28 authenticated browser tests), job:check, dependency audit, secret scans, OpenAPI validation and actionlint. Final tests: 88 passed, zero failed/skipped. Real app tests verified both viewports, login/denials/revocation/expiry, inventory create/edit/readback, concurrency, scope, roles and error handling. Separate component fixtures verified slow/error/empty transitions. The stale list discovered during the first real create/edit run was fixed and the complete suites rerun. See the [consolidated acceptance report](../docs/reports/phase-01-report.md) and [native setup](../docs/database/local-development.md). Stop for owner review. Changes remain uncommitted.
+
+The final desktop and mobile database suite deliberately held a lock until the actual web query timed out, verified the loading/error UI, released the lock and recovered through the retry button. All 28 DB-backed browser cases passed. The CI service branch also passed its migration and integration path locally over isolated loopback TCP. No hosted run was triggered.
