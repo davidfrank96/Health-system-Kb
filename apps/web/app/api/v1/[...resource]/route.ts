@@ -1,3 +1,10 @@
+import {
+	endpointInput,
+	saveEndpoint,
+	listEndpoints,
+	statusOverview,
+	statusHistory,
+} from "../../../../lib/monitoring";
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import { staffFor } from "../../../../lib/auth";
@@ -43,7 +50,44 @@ async function handle(req: NextRequest, { params }: Args) {
 				headers.set("X-CSRF-Token", mac("csrf", token));
 				return Response.json(staff, { headers });
 			}
-			if (resourceName !== "services" || resource.length > 2)
+			if (
+				resourceName === "status" &&
+				resource.length === 2 &&
+				req.method === "GET"
+			) {
+				const q = req.nextUrl.searchParams,
+					env = environment.parse(q.get("environment"));
+				const limit = z.coerce
+					.number()
+					.int()
+					.min(1)
+					.max(100)
+					.parse(q.get("limit") ?? 50);
+				if (id === "overview")
+					return Response.json(
+						await statusOverview(c, staff, env, limit, q.get("cursor")),
+						{ headers },
+					);
+				if (id === "history")
+					return Response.json(
+						await statusHistory(
+							c,
+							staff,
+							env,
+							z.uuid().parse(q.get("serviceId")),
+							new Date(z.iso.datetime().parse(q.get("start"))),
+							new Date(z.iso.datetime().parse(q.get("end"))),
+							limit,
+							q.get("cursor"),
+						),
+						{ headers },
+					);
+				throw new HttpError(404, "not_found");
+			}
+			if (
+				!["services", "endpoints"].includes(resourceName) ||
+				resource.length > 2
+			)
 				throw new HttpError(404, "not_found");
 			if (id && !z.uuid().safeParse(id).success)
 				throw new HttpError(400, "invalid_id");
@@ -57,11 +101,22 @@ async function handle(req: NextRequest, { params }: Args) {
 						.max(100)
 						.parse(q.get("limit") ?? 50);
 				return Response.json(
-					await listServices(c, staff, env, limit, q.get("cursor")),
+					resourceName === "endpoints"
+						? await listEndpoints(
+								c,
+								staff,
+								env,
+								limit,
+								q.get("cursor"),
+								q.has("serviceId") ? z.uuid().parse(q.get("serviceId")) : null,
+							)
+						: await listServices(c, staff, env, limit, q.get("cursor")),
 					{ headers },
 				);
 			}
 			if (req.method === "GET") {
+				if (resourceName === "endpoints")
+					throw new HttpError(405, "invalid_method");
 				const record = await getService(c, staff, id);
 				headers.set("ETag", `"${record.version}"`);
 				return Response.json(record, { headers });
@@ -81,7 +136,20 @@ async function handle(req: NextRequest, { params }: Args) {
 				: null;
 			if (req.headers.get("content-type")?.split(";")[0] !== "application/json")
 				throw new HttpError(400, "expected_json");
-			const body = serviceInput.parse(JSON.parse(await boundedBody(req)));
+			const raw = JSON.parse(await boundedBody(req));
+			if (resourceName === "endpoints") {
+				const record = await saveEndpoint(
+					c,
+					staff,
+					endpointInput.parse(raw),
+					key,
+					id ?? null,
+					revision,
+				);
+				headers.set("ETag", `"${record.version}"`);
+				return Response.json(record, { status: id ? 200 : 201, headers });
+			}
+			const body = serviceInput.parse(raw);
 			const record = await saveService(
 				c,
 				staff,

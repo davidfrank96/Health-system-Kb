@@ -20,7 +20,9 @@
     "test:e2e:db": "bash database/native.sh browser",
     "db:migrate": "node database/migrate.mjs",
     "db:approve": "node database/approve-staff.mjs",
-    "test:db": "bash database/native.sh verify"
+    "test:db": "bash database/native.sh verify",
+    "job:fixtures": "bash database/native.sh monitoring",
+    "db:monitoring-admin": "node database/monitoring-admin.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
@@ -35,6 +37,7 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "4.3.4",
+    "ipaddr.js": "2.5.0",
     "jose": "6.2.15",
     "next": "16.4.5",
     "openid-client": "6.8.9",

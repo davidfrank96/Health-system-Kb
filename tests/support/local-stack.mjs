@@ -9,6 +9,7 @@ import { testClient } from "./approved-db.mjs";
 import { approveStaff } from "../../database/approve-staff.mjs";
 import { startIssuer } from "./issuer.mjs";
 
+import { monitoringFixture } from "./monitoring-fixture.mjs";
 const interactive = process.argv[2] === "local";
 const owner = interactive
 	? new pg.Client(connectionOptions(process.env, "migrator"))
@@ -17,6 +18,7 @@ if (interactive) {
 	await owner.connect();
 	await checkVersion(owner);
 }
+if (!interactive) await monitoringFixture(owner);
 const reservation = createServer();
 reservation.listen(interactive ? 3000 : 0, "127.0.0.1");
 await once(reservation, "listening");

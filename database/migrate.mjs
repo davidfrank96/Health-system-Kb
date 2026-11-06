@@ -23,6 +23,7 @@ try {
 	for (const [index, file] of [
 		"001_identity.sql",
 		"002_inventory.sql",
+		"003_monitoring.sql",
 	].entries()) {
 		const sql = await readFile(
 				new URL(`./migrations/${file}`, import.meta.url),

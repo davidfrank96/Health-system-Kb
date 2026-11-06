@@ -6,7 +6,7 @@ export function connectionOptions(env, purpose = "web") {
 		host = env.KBEAN_DB_HOST ?? "";
 	if (
 		!["development", "test"].includes(tier) ||
-		!["web", "migrator"].includes(purpose)
+		!["web", "migrator", "collector"].includes(purpose)
 	)
 		throw new Error("Invalid local database tier or identity.");
 	if (
@@ -15,9 +15,22 @@ export function connectionOptions(env, purpose = "web") {
 	)
 		throw new Error("Phase 01 requires a local database connection.");
 	const database = env.KBEAN_DB_NAME,
-		user = env[purpose === "web" ? "KBEAN_DB_USER" : "KBEAN_MIGRATION_USER"],
+		user =
+			env[
+				purpose === "web"
+					? "KBEAN_DB_USER"
+					: purpose === "collector"
+						? "KBEAN_COLLECTOR_USER"
+						: "KBEAN_MIGRATION_USER"
+			],
 		password =
-			env[purpose === "web" ? "KBEAN_DB_PASSWORD" : "KBEAN_MIGRATION_PASSWORD"];
+			env[
+				purpose === "web"
+					? "KBEAN_DB_PASSWORD"
+					: purpose === "collector"
+						? "KBEAN_COLLECTOR_PASSWORD"
+						: "KBEAN_MIGRATION_PASSWORD"
+			];
 	const port = Number(env.KBEAN_DB_PORT ?? 5432);
 	if (
 		database !== `kbean_${tier}` ||
@@ -35,7 +48,7 @@ export function connectionOptions(env, purpose = "web") {
 		user,
 		password,
 		ssl: false,
-		options: "-c search_path=public",
+		options: "-c search_path=public -c timezone=UTC",
 		connectionTimeoutMillis: 4000,
 		statement_timeout: 5000,
 		application_name: `kbean-${tier}-${purpose}`,

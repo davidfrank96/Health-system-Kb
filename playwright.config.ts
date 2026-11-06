@@ -4,7 +4,7 @@ const approved = process.env.KBEAN_BROWSER_DB === "approved";
 const publicPort = 41789;
 export default defineConfig({
 	testMatch: approved
-		? ["**/auth.spec.ts", "**/dashboard.spec.ts"]
+		? ["**/auth.spec.ts", "**/dashboard.spec.ts", "**/monitoring.spec.ts"]
 		: [
 				"**/browser-isolation.spec.ts",
 				"**/public-app.spec.ts",

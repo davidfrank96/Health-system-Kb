@@ -1,6 +1,6 @@
 # Lean data flows and execution limits
 
-Proposed design; no runtime implemented. Store UTC observation time, collection/entry time and ingestion time separately, with source and environment attribution.
+Phase02 implements the local availability path. Provider/manual/QA flows below remain planned. Store UTC observation time, collection/entry time and ingestion time separately, with source and environment attribution.
 
 ## Finite scheduled run
 
@@ -29,3 +29,8 @@ Manual JSON or CSV → authenticated operator scope check → validation preview
 Small signed QA event is verified and normalized synchronously in the existing web app. Commit event identity/digest, final run summary and audit together; return 201 only after commit, 200 for identical duplicate, 409 for conflict. No async inbox consumer is needed. Existing no-charge polling, if selected, runs in the same scheduled job. Evidence links are never fetched automatically.
 
 Incident/maintenance updates are authorized database transactions. Observed downtime/recovery records are generated from the confirmation rules and remain distinct from operator incident narratives. Reports are bounded read queries over checks/daily summaries/incidents/QA, returned inside the app or CSV directly; include generation time, method, coverage and calculation version. No persistent report queue, artifact store, delivery outbox or notification service. Long/unbounded reports are rejected; pagination or narrower windows keep the request bounded.
+
+
+## Phase 02 runtime boundary
+
+The reusable runner currently accepts only an approved disposable test database and exact controlled fixture authority. The default entrypoint sends no requests, and no environment toggle enables live probing. The collector connection owns the advisory lock for its entire lifetime; run registration commits before outbound work. The final check/state/event/rollup transaction either commits together or rolls back. Endpoint configuration is rechecked under row lock before storing a result. Lost lock connections abort work and leave an honest unfinished run. API handlers use the web identity and have no probe or owner-approval capability. See [commands and implemented limits](../operations/availability-monitoring.md).

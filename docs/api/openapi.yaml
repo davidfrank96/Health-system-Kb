@@ -1,9 +1,10 @@
 openapi: 3.0.3
 info:
-  title: Kbean internal health lean MVP proposed API
-  version: 0.3.0-foundation
-  description: Phase 01 implements staff identity, services and process probes. Other operations remain planned. Internal-only operational content. One web service and finite 15-minute
-    job; no public publishing or background queue.
+  title: Kbean internal health API
+  version: 0.4.0-monitoring
+  description: Phase01 foundation and Phase02 local availability monitoring are implemented. Other operations
+    remain planned. Staff-only operations; live collection disabled. Fractions in monitoring availability
+    range from 0 to 1.
 servers:
 - url: https://health.example.invalid
   description: Documentation placeholder only
@@ -368,7 +369,8 @@ paths:
     patch:
       operationId: updateService
       summary: updateService
-      description: Implemented locally. Environment is immutable; authorized scope derived from stored service.
+      description: Implemented locally. Environment is immutable; authorized scope derived from stored
+        service.
       x-implementation-status: implemented-local
       x-required-roles:
       - admin
@@ -462,20 +464,23 @@ paths:
     get:
       operationId: listEndpoints
       summary: listEndpoints
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: 'Implemented locally. '
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
       - admin
       parameters:
       - $ref: '#/components/parameters/Environment'
-      - $ref: '#/components/parameters/ServiceId'
+      - name: serviceId
+        in: query
+        required: false
+        schema: *id001
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -551,9 +556,11 @@ paths:
     post:
       operationId: createEndpoint
       summary: createEndpoint
-      description: UNIMPLEMENTED. Disabled by default; enable requires stored owner approval and approved safe URL.
-        No request is sent by this API.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Disabled by default; enable requires stored owner approval and
+        approved safe URL. No request is sent by this API. Owner approval is written offline using migration
+        authority; never accepted in the request body. Maximum200 configurations,20 per service and20
+        active across the deployment.
+      x-implementation-status: implemented-local
       x-required-roles:
       - admin
       parameters:
@@ -561,7 +568,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '201':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -644,9 +651,10 @@ paths:
     patch:
       operationId: updateEndpoint
       summary: updateEndpoint
-      description: UNIMPLEMENTED. Scope immutable. URL change invalidates approval. Safe URL/approval checks required;
-        no immediate probe.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Scope immutable. URL change invalidates approval. Safe URL/approval
+        checks required; no immediate probe. Full validated input with If-Match. Target changes clear
+        approval and disable the monitor. Approval does not enable live collection.
+      x-implementation-status: implemented-local
       x-required-roles:
       - admin
       parameters:
@@ -656,7 +664,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -739,17 +747,19 @@ paths:
     get:
       operationId: getPrivateStatus
       summary: getPrivateStatus
-      description: UNIMPLEMENTED. Staff-only, no-store. Sampled status; no anonymous publication.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Staff-only, no-store. Sampled status; no anonymous publication.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
       - admin
       parameters:
       - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -821,8 +831,12 @@ paths:
     get:
       operationId: getSampledHistory
       summary: getSampledHistory
-      description: UNIMPLEMENTED. Daily summary, <=366 days, always labeled 15-minute sampled availability.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Daily summary, <=90 days, always labeled 15-minute sampled availability.
+        start/end are UTC with [start,end) slots, max90 days. One service vote per slot across historically
+        required endpoints (failure, then unknown, then success). Daily counts are summed. Fractions are0–1;
+        missing samples never success. Latest100 overlapping outages returned; eventsTruncated signals
+        a narrower range is needed.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -836,7 +850,7 @@ paths:
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -1080,8 +1094,8 @@ paths:
     get:
       operationId: getMetricsLatest
       summary: getMetricsLatest
-      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation age; longer
-        trends use daily reports.
+      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation
+        age; longer trends use daily reports.
       x-implementation-status: unimplemented
       x-required-roles:
       - viewer
@@ -1167,8 +1181,8 @@ paths:
     get:
       operationId: getMetricsHistory
       summary: getMetricsHistory
-      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation age; longer
-        trends use daily reports.
+      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation
+        age; longer trends use daily reports.
       x-implementation-status: unimplemented
       x-required-roles:
       - viewer
@@ -1256,8 +1270,8 @@ paths:
     post:
       operationId: enterManualSnapshot
       summary: enterManualSnapshot
-      description: UNIMPLEMENTED. Always sourceMethod manual, server actor/time; observedAt within past 30d, no
-        future >2m. Cannot alter health checks.
+      description: UNIMPLEMENTED. Always sourceMethod manual, server actor/time; observedAt within past
+        30d, no future >2m. Cannot alter health checks.
       x-implementation-status: unimplemented
       x-required-roles:
       - operator
@@ -1363,7 +1377,7 @@ paths:
       - name: X-Preview-Digest
         in: header
         required: false
-        schema: &id008
+        schema: &id021
           type: string
           maxLength: 64
           pattern: ^[a-f0-9]{64}$
@@ -1539,7 +1553,8 @@ paths:
       operationId: updateIntegration
       summary: updateIntegration
       description: UNIMPLEMENTED. No secret values. Enable only if stored current permission AND verified_no_incremental_cost
-        evidence and bounded allowance exist. Client cannot self-assert costStatus. No live validation request.
+        evidence and bounded allowance exist. Client cannot self-assert costStatus. No live validation
+        request.
       x-implementation-status: unimplemented
       x-required-roles:
       - admin
@@ -2090,8 +2105,8 @@ paths:
     patch:
       operationId: updateMaintenance
       summary: updateMaintenance
-      description: UNIMPLEMENTED. Scope immutable; audited update/recomputation within retained evidence. End may
-        be shortened to cancel remaining future window.
+      description: UNIMPLEMENTED. Scope immutable; audited update/recomputation within retained evidence.
+        End may be shortened to cancel remaining future window.
       x-implementation-status: unimplemented
       x-required-roles:
       - operator
@@ -2270,8 +2285,8 @@ paths:
     post:
       operationId: importManualQA
       summary: importManualQA
-      description: UNIMPLEMENTED. Manual provenance. Same run/digest deduplicates, conflicting terminal result returns
-        409.
+      description: UNIMPLEMENTED. Manual provenance. Same run/digest deduplicates, conflicting terminal
+        result returns 409.
       x-implementation-status: unimplemented
       x-required-roles:
       - operator
@@ -2359,8 +2374,8 @@ paths:
     post:
       operationId: receiveSignedQARun
       summary: receiveSignedQARun
-      description: UNIMPLEMENTED. <=128 KiB. Synchronous validated DB commit, no async queue. HMAC ±300s over timestamp.eventId.rawBody;
-        key binds service/env. Duplicate returns 200.
+      description: UNIMPLEMENTED. <=128 KiB. Synchronous validated DB commit, no async queue. HMAC ±300s
+        over timestamp.eventId.rawBody; key binds service/env. Duplicate returns 200.
       x-implementation-status: unimplemented
       x-required-roles: []
       parameters:
@@ -2382,6 +2397,21 @@ paths:
         required: true
         schema: *id001
       responses:
+        '200':
+          description: Existing identical committed run; no new records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARun'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
         '201':
           description: Proposed successful response
           content:
@@ -2451,21 +2481,6 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
-        '200':
-          description: Existing identical committed run; no new records
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QARun'
-          headers:
-            X-Request-Id:
-              description: Safe correlation ID
-              schema: *id001
-            Cache-Control:
-              description: private, no-store for operational data
-              schema:
-                type: string
-                maxLength: 100
       requestBody:
         required: true
         content:
@@ -2562,8 +2577,8 @@ paths:
     get:
       operationId: getReportSummary
       summary: getReportSummary
-      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance shown.
-        No report queue/service. Export is audited and safely escaped.
+      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance
+        shown. No report queue/service. Export is audited and safely escaped.
       x-implementation-status: unimplemented
       x-required-roles:
       - viewer
@@ -2657,8 +2672,8 @@ paths:
     get:
       operationId: getReportExport
       summary: getReportExport
-      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance shown.
-        No report queue/service. Export is audited and safely escaped.
+      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance
+        shown. No report queue/service. Export is audited and safely escaped.
       x-implementation-status: unimplemented
       x-required-roles:
       - viewer
@@ -2835,8 +2850,8 @@ paths:
     get:
       operationId: getLive
       summary: getLive
-      description: Implemented locally. Minimal platform health only. No service data. Readiness uses bounded local critical
-        dependency check, not paid/provider calls.
+      description: Implemented locally. Minimal platform health only. No service data. Readiness uses
+        bounded local critical dependency check, not paid/provider calls.
       x-implementation-status: implemented-local
       x-required-roles: []
       parameters: []
@@ -2915,8 +2930,8 @@ paths:
     get:
       operationId: getReady
       summary: getReady
-      description: Implemented locally. Minimal platform health only. No service data. Readiness uses bounded local critical
-        dependency check, not paid/provider calls.
+      description: Implemented locally. Minimal platform health only. No service data. Readiness uses
+        bounded local critical dependency check, not paid/provider calls.
       x-implementation-status: implemented-local
       x-required-roles: []
       parameters: []
@@ -3001,7 +3016,8 @@ components:
       type: apiKey
       in: header
       name: X-Kbean-Signature
-      description: HMAC-SHA256 over timestamp.eventId.rawBody; sender scoped to service/environment; see QA design.
+      description: HMAC-SHA256 over timestamp.eventId.rawBody; sender scoped to service/environment; see
+        QA design.
   parameters:
     Environment:
       name: environment
@@ -3009,7 +3025,7 @@ components:
       required: true
       schema: &id003
         type: string
-        enum: &id010
+        enum: &id023
         - production
         - staging
         - development
@@ -3066,8 +3082,8 @@ components:
         type: string
         maxLength: 128
         minLength: 16
-      description: Actor/route scoped, retained at least 24h; changed body conflicts. Import/QA identities persist
-        for their record retention.
+      description: Actor/route scoped, retained at least 24h; changed body conflicts. Import/QA identities
+        persist for their record retention.
     IfMatch:
       name: If-Match
       in: header
@@ -3080,7 +3096,7 @@ components:
       name: metricName
       in: query
       required: true
-      schema: &id005
+      schema: &id018
         type: string
         maxLength: 100
   schemas:
@@ -3152,7 +3168,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        quality: &id007
+        quality: &id020
           type: string
           enum:
           - fresh
@@ -3291,23 +3307,27 @@ components:
       additionalProperties: false
       properties:
         id: *id001
-        name:
+        name: &id037
           type: string
           maxLength: 120
-        product:
+        product: &id038
           type: string
           maxLength: 120
         environment: *id003
-        owner:
+        owner: &id039
           type: string
           maxLength: 120
-        criticality:
+        criticality: &id040
           type: string
-          enum: [critical, high, normal, low]
-        evidenceReference:
+          enum:
+          - critical
+          - high
+          - normal
+          - low
+        evidenceReference: &id041
           type: string
           maxLength: 500
-        verification:
+        verification: &id042
           type: string
           enum:
           - unverified
@@ -3321,9 +3341,9 @@ components:
           - down
           - maintenance
           - unknown
-        freshness:
+        freshness: &id043
           $ref: '#/components/schemas/Freshness'
-        version:
+        version: &id044
           type: integer
           minimum: 1
       required:
@@ -3342,111 +3362,357 @@ components:
       type: object
       additionalProperties: false
       properties:
-        serviceId: *id001
-        environment: *id003
-        url:
+        serviceId: &id005
           type: string
-          maxLength: 2048
+          format: uuid
+        environment: &id006
+          type: string
+          enum:
+          - development
+          - staging
+          - production
+        url: &id007
+          type: string
           format: uri
-          pattern: ^https://
-        expectedStatusCodes:
+          maxLength: 2048
+          description: Canonical HTTPS host/path, port443; no credentials, query or fragment. HTTP127.0.0.1
+            fixtures accepted only by the isolated test application.
+        enabled: &id008
+          type: boolean
+          default: false
+        required: &id009
+          type: boolean
+          default: true
+        expectedCodes: &id010
           type: array
           items:
             type: integer
-            minimum: 100
+            minimum: 200
             maximum: 599
           maxItems: 10
-        required:
-          type: boolean
-        enabled:
-          type: boolean
-          default: false
-        approvalReference:
-          type: string
-          maxLength: 500
+          minItems: 1
+          default:
+          - 200
+          description: Redirect codes300–399 rejected.
+        failureThreshold: &id011
+          type: integer
+          minimum: 2
+          maximum: 5
+          default: 2
+        recoveryThreshold: &id012
+          type: integer
+          minimum: 2
+          maximum: 5
+          default: 2
+        slowMs: &id013
+          type: integer
+          minimum: 500
+          maximum: 9000
+          default: 2000
+        clearMs: &id014
+          type: integer
+          minimum: 100
+          maximum: 8000
+          default: 1000
+          description: Must be less than slowMs.
       required:
       - serviceId
       - environment
       - url
-      - expectedStatusCodes
-      - required
-      - enabled
     Endpoint:
       type: object
       additionalProperties: false
       properties:
-        id: *id001
-        serviceId: *id001
-        environment: *id003
-        url:
-          type: string
-          maxLength: 2048
-          format: uri
-        enabled:
-          type: boolean
-        intervalSeconds:
-          type: integer
-          enum:
-          - 900
-        lastCheckedAt: *id004
-        lastSuccessAt: *id004
+        serviceId: *id005
+        environment: *id006
+        url: *id007
+        enabled: *id008
+        required: *id009
+        expectedCodes: *id010
+        failureThreshold: *id011
+        recoveryThreshold: *id012
+        slowMs: *id013
+        clearMs: *id014
+        id: *id005
         version:
           type: integer
           minimum: 1
+        approved: &id016
+          type: boolean
+        approvalReference:
+          type: string
+          maxLength: 500
+          nullable: true
+        approvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        state:
+          $ref: '#/components/schemas/MonitorState'
+        latest:
+          type: object
+          additionalProperties: false
+          properties: &id025
+            outcome:
+              type: string
+              enum:
+              - success
+              - failure
+              - unknown
+            failure:
+              type: string
+              nullable: true
+            httpStatus:
+              type: integer
+              minimum: 100
+              maximum: 599
+              nullable: true
+            latencyMs:
+              type: integer
+              minimum: 0
+              maximum: 300000
+              nullable: true
+            observedAt: &id015
+              type: string
+              format: date-time
+            collectedAt: *id015
+            attempts:
+              type: integer
+              minimum: 0
+              maximum: 2
+            slot: *id015
+            maintenance: *id016
+          required: &id026
+          - outcome
+          - failure
+          - httpStatus
+          - latencyMs
+          - observedAt
+          - attempts
+          - slot
+          - maintenance
+          nullable: true
+        condition: &id024
+          type: string
+          enum:
+          - healthy
+          - degraded
+          - down
+          - maintenance
+          - unknown
+        quality: &id017
+          type: string
+          enum:
+          - fresh
+          - stale
+          - missing
+          - error
+        reason:
+          type: string
+          nullable: true
+        maintenance: *id016
       required:
-      - id
       - serviceId
       - environment
       - url
       - enabled
-      - intervalSeconds
-      - lastCheckedAt
-      - lastSuccessAt
+      - required
+      - expectedCodes
+      - failureThreshold
+      - recoveryThreshold
+      - slowMs
+      - clearMs
+      - id
       - version
+      - approved
+      - approvalReference
+      - approvedAt
+      - state
+      - latest
+      - condition
+      - quality
+      - reason
+      - maintenance
     StatusOverview:
       type: object
       additionalProperties: false
       properties:
-        environment: *id003
-        generatedAt: *id002
-        services:
+        items:
           type: array
           items:
-            $ref: '#/components/schemas/Service'
-          maxItems: 20
-        lastCollectionAt: *id004
-        activeIncidentCount:
-          type: integer
-          minimum: 0
-        disabledIntegrationCount:
-          type: integer
-          minimum: 0
-        samplingNotice:
+            $ref: '#/components/schemas/MonitorService'
+          maxItems: 100
+        nextCursor:
           type: string
+          maxLength: 512
+          nullable: true
+        counts:
+          type: object
+          additionalProperties: false
+          properties:
+            total:
+              type: integer
+              minimum: 0
+            monitored:
+              type: integer
+              minimum: 0
+            healthy:
+              type: integer
+              minimum: 0
+            degraded:
+              type: integer
+              minimum: 0
+            down:
+              type: integer
+              minimum: 0
+            unknown:
+              type: integer
+              minimum: 0
+            stale:
+              type: integer
+              minimum: 0
+          required:
+          - total
+          - monitored
+          - healthy
+          - degraded
+          - down
+          - unknown
+          - stale
+        latestRun:
+          type: object
+          additionalProperties: false
+          properties: &id045
+            scheduledSlot: *id015
+            startedAt: *id015
+            finishedAt:
+              type: string
+              format: date-time
+              nullable: true
+            status:
+              type: string
+              enum:
+              - running
+              - completed
+              - error
+            attempts:
+              type: integer
+              minimum: 0
+              maximum: 40
+            errorCode:
+              type: string
+              nullable: true
+            quality: *id017
+          required: &id046
+          - scheduledSlot
+          - startedAt
+          - finishedAt
+          - status
+          - attempts
+          - errorCode
+          - quality
+          nullable: true
+        recentFailures:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              endpointId: *id005
+              serviceId: *id005
+              name:
+                type: string
+              scheduledSlot: *id015
+              observedAt: *id015
+              failure:
+                type: string
+                nullable: true
+              outcome:
+                type: string
+                enum:
+                - failure
+                - unknown
+            required:
+            - endpointId
+            - serviceId
+            - name
+            - scheduledSlot
+            - observedAt
+            - failure
+            - outcome
+          maxItems: 10
+        liveCollectionEnabled:
+          type: boolean
           enum:
-          - Sampled every 15 minutes; short outages may be missed.
+          - false
       required:
-      - environment
-      - generatedAt
-      - services
-      - lastCollectionAt
-      - activeIncidentCount
-      - disabledIntegrationCount
-      - samplingNotice
+      - items
+      - nextCursor
+      - counts
+      - latestRun
+      - recentFailures
+      - liveCollectionEnabled
     HistoryDay:
       type: object
       additionalProperties: false
       properties:
-        serviceId: *id001
-        date:
+        day:
           type: string
           format: date
-        availability:
-          $ref: '#/components/schemas/Availability'
+        expected: &id027
+          type: integer
+          minimum: 0
+        success: &id028
+          type: integer
+          minimum: 0
+        failure: &id029
+          type: integer
+          minimum: 0
+        unknown: &id030
+          type: integer
+          minimum: 0
+        excluded: &id031
+          type: integer
+          minimum: 0
+        coverage: &id032
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+        observed: &id033
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+        lower: &id034
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+        upper: &id035
+          type: number
+          minimum: 0
+          maximum: 1
+          nullable: true
+        reason: &id036
+          type: string
+          enum:
+          - not_monitored
+          - no_known_observations
+          - insufficient_coverage
+          nullable: true
       required:
-      - serviceId
-      - date
-      - availability
+      - day
+      - expected
+      - success
+      - failure
+      - unknown
+      - excluded
+      - coverage
+      - observed
+      - lower
+      - upper
+      - reason
     ProbeResult:
       type: object
       additionalProperties: false
@@ -3496,29 +3762,36 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *id001
-        endpointId: *id001
-        environment: *id003
-        firstFailedAt: *id002
-        confirmedAt: *id002
-        firstRecoveryAt: *id004
-        resolvedAt: *id004
-        hasEvidenceGaps:
-          type: boolean
-        method:
+        id: *id005
+        endpointId: *id005
+        firstFailedAt: *id015
+        confirmedAt: *id015
+        firstRecoveryAt:
           type: string
-          enum:
-          - sampled-observations
+          format: date-time
+          nullable: true
+        resolvedAt:
+          type: string
+          format: date-time
+          nullable: true
+        evidenceGap: *id016
+        firstFailedSlot: *id015
+        confirmedSlot: *id015
+        recoverySlot:
+          type: string
+          format: date-time
+          nullable: true
       required:
       - id
       - endpointId
-      - environment
       - firstFailedAt
       - confirmedAt
       - firstRecoveryAt
       - resolvedAt
-      - hasEvidenceGaps
-      - method
+      - evidenceGap
+      - firstFailedSlot
+      - confirmedSlot
+      - recoverySlot
     MetricInput:
       type: object
       additionalProperties: false
@@ -3528,8 +3801,8 @@ components:
         provider:
           type: string
           maxLength: 50
-        metricName: *id005
-        unit: &id006
+        metricName: *id018
+        unit: &id019
           type: string
           maxLength: 50
         aggregation:
@@ -3577,8 +3850,8 @@ components:
         provider:
           type: string
           maxLength: 50
-        metricName: *id005
-        unit: *id006
+        metricName: *id018
+        unit: *id019
         aggregation:
           type: string
           maxLength: 40
@@ -3601,7 +3874,7 @@ components:
           type: string
           format: uuid
           nullable: true
-        quality: *id007
+        quality: *id020
       required:
       - id
       - serviceId
@@ -3624,7 +3897,7 @@ components:
       properties:
         dryRun:
           type: boolean
-        digest: *id008
+        digest: *id021
         validRows:
           type: integer
           minimum: 0
@@ -3778,7 +4051,7 @@ components:
           - high
           - medium
           - low
-        status: &id009
+        status: &id022
           type: string
           enum:
           - investigating
@@ -3804,7 +4077,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        status: *id009
+        status: *id022
         message:
           type: string
           maxLength: 4000
@@ -4102,7 +4375,7 @@ components:
           nullable: true
         environment:
           type: string
-          enum: *id010
+          enum: *id023
           nullable: true
         action:
           type: string
@@ -4157,6 +4430,21 @@ components:
       type: object
       additionalProperties: false
       properties:
+        service:
+          $ref: '#/components/schemas/Service'
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+          maxItems: 200
+        method:
+          type: string
+          enum:
+          - 15-minute sampled availability
+        start: *id015
+        end: *id015
+        summary:
+          $ref: '#/components/schemas/SampleCounts'
         items:
           type: array
           items:
@@ -4166,9 +4454,23 @@ components:
           type: string
           maxLength: 512
           nullable: true
+        downtimeEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DowntimeEvent'
+          maxItems: 100
+        eventsTruncated: *id016
       required:
+      - service
+      - endpoints
+      - method
+      - start
+      - end
+      - summary
       - items
       - nextCursor
+      - downtimeEvents
+      - eventsTruncated
     ProbeResultPage:
       type: object
       additionalProperties: false
@@ -4313,3 +4615,114 @@ components:
       required:
       - items
       - nextCursor
+    MonitorState:
+      type: object
+      additionalProperties: false
+      properties:
+        condition: *id024
+        lastSlot:
+          type: number
+          nullable: true
+        lastObserved:
+          type: string
+          format: date-time
+          nullable: true
+        lastSuccess:
+          type: string
+          format: date-time
+          nullable: true
+        failures:
+          type: integer
+          minimum: 0
+        successes:
+          type: integer
+          minimum: 0
+        slow:
+          type: integer
+          minimum: 0
+        fast:
+          type: integer
+          minimum: 0
+        firstFailure:
+          type: string
+          format: date-time
+          nullable: true
+        firstRecovery:
+          type: string
+          format: date-time
+          nullable: true
+        open: *id016
+        gap: *id016
+        slowWarning: *id016
+    MonitorCheck:
+      type: object
+      additionalProperties: false
+      properties: *id025
+      required: *id026
+    SampleCounts:
+      type: object
+      additionalProperties: false
+      properties:
+        expected: *id027
+        success: *id028
+        failure: *id029
+        unknown: *id030
+        excluded: *id031
+        coverage: *id032
+        observed: *id033
+        lower: *id034
+        upper: *id035
+        reason: *id036
+      required:
+      - expected
+      - success
+      - failure
+      - unknown
+      - excluded
+      - coverage
+      - observed
+      - lower
+      - upper
+      - reason
+    MonitorService:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *id001
+        name: *id037
+        product: *id038
+        environment: *id003
+        owner: *id039
+        criticality: *id040
+        evidenceReference: *id041
+        verification: *id042
+        condition: *id024
+        freshness: *id043
+        version: *id044
+        quality: *id017
+        monitored: *id016
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+          maxItems: 200
+      required:
+      - id
+      - name
+      - product
+      - environment
+      - owner
+      - criticality
+      - evidenceReference
+      - verification
+      - condition
+      - freshness
+      - version
+      - quality
+      - monitored
+      - endpoints
+    CollectionStatus:
+      type: object
+      additionalProperties: false
+      properties: *id045
+      required: *id046

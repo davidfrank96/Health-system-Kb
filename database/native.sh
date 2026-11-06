@@ -3,7 +3,7 @@ set -euo pipefail
 umask 077
 mode=${1:?Expected local, integration, browser, or verify}
 shift
-case "$mode" in local) tier=development;; integration|browser|verify) tier=test;; *) exit 2;; esac
+case "$mode" in local) tier=development;; integration|browser|verify|monitoring) tier=test;; *) exit 2;; esac
 # Prefer Postgres.app; a compatible native distribution on PATH is also supported.
 for bindir in "/Applications/Postgres.app/Contents/Versions/18/bin" "$HOME/Applications/Postgres.app/Contents/Versions/18/bin"; do
   if [[ -x "$bindir/initdb" ]]; then export PATH="$bindir:$PATH"; break; fi
@@ -45,11 +45,12 @@ else
   owned_server=true
   clean pg_ctl -D "$state/data" -l "$state/postgres.log" -o "-c listen_addresses='' -c unix_socket_directories=$dbhost -p $dbport" -w start
 fi
-for account in web migrator; do
+for account in web migrator collector; do
   if [[ ! -s "$state/$account.pass" ]]; then openssl rand -hex 32 > "$state/$account.pass"; fi
 done
 local_env=("KBEAN_DB_TIER=$tier" "KBEAN_DB_NAME=kbean_$tier" "KBEAN_DB_HOST=$dbhost" "KBEAN_DB_PORT=$dbport"
   "KBEAN_DB_USER=kbean_${tier}_web" "KBEAN_DB_PASSWORD=$(cat "$state/web.pass")"
+  "KBEAN_COLLECTOR_USER=kbean_${tier}_collector" "KBEAN_COLLECTOR_PASSWORD=$(cat "$state/collector.pass")"
   "KBEAN_MIGRATION_USER=kbean_${tier}_migrator" "KBEAN_MIGRATION_PASSWORD=$(cat "$state/migrator.pass")")
 fixture(){ clean env "${local_env[@]}" NEXT_TELEMETRY_DISABLED=1 "$@"; }
 fixture env KBEAN_BOOTSTRAP_PASSWORD="$bootstrap" node database/bootstrap-local.mjs
@@ -74,6 +75,7 @@ if [[ "$tier" == test ]]; then
 fi
 case "$mode" in
   local) fixture node tests/support/local-stack.mjs local;;
+  monitoring) fixture node jobs/check.mjs --fixtures;;
   integration) fixture vitest run tests/integration;;
   browser) fixture node tests/support/local-stack.mjs browser "$@";;
   verify) fixture vitest run tests/integration && fixture node tests/support/local-stack.mjs browser;;

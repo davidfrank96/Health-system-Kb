@@ -382,6 +382,9 @@ h3 {
 .env-nav [aria-current] {
 	text-decoration: underline;
 }
+.endpoint-detail button {
+	margin: 8px 0 0 14px;
+}
 .pagination button + button {
 	margin-left: 8px;
 }
@@ -460,4 +463,260 @@ h3 {
 	.login-box {
 		padding: 24px;
 	}
+}
+.monitoring {
+	margin-bottom: 28px;
+}
+.muted,
+.collection {
+	color: var(--muted, #566b63);
+	font-size: 13px;
+	line-height: 1.6;
+}
+.monitor-stats {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 12px;
+	margin: 22px 0;
+}
+.monitor-stats article {
+	background: white;
+	border: 1px solid #dce6e0;
+	border-radius: 10px;
+	padding: 16px;
+}
+.monitor-stats strong {
+	display: block;
+	font-size: 28px;
+	font-weight: 550;
+	margin-top: 8px;
+}
+.monitor-list {
+	border: 1px solid #dce6e0;
+	background: white;
+	border-radius: 12px;
+	overflow: hidden;
+}
+.monitor-row {
+	display: grid;
+	grid-template-columns: 1.1fr 0.7fr 1fr;
+	gap: 18px;
+	padding: 18px 20px;
+	border-bottom: 1px solid #e9eeeb;
+	align-items: center;
+}
+.monitor-row:last-child {
+	border-bottom: 0;
+}
+.monitor-row small {
+	display: block;
+	color: #60746c;
+	margin-top: 5px;
+	font-size: 12px;
+}
+button.service-link {
+	border: 0;
+	background: transparent;
+	padding: 0;
+	color: #115e48;
+	text-align: left;
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 4px;
+}
+.health {
+	display: inline-block;
+	border-radius: 20px;
+	padding: 4px 9px;
+	background: #eef1ef;
+	color: #475b52;
+	font-size: 12px;
+	text-transform: capitalize;
+}
+.health-healthy {
+	background: #e0f4e9;
+	color: #16613e;
+}
+.health-down {
+	background: #fce7e7;
+	color: #942e2e;
+}
+.health-degraded {
+	background: #fff0d5;
+	color: #805400;
+}
+.health-maintenance {
+	background: #e8e7fa;
+	color: #4a4480;
+}
+.history {
+	margin-top: 24px;
+}
+.history select {
+	padding: 8px;
+	border: 1px solid #ccd8d0;
+	border-radius: 6px;
+	background: white;
+	margin-left: 8px;
+}
+.history h3 {
+	margin-top: 24px;
+}
+.history p {
+	font-size: 13px;
+	line-height: 1.7;
+}
+.history .availability-number {
+	font-size: 30px;
+	font-weight: 550;
+}
+.availability-number span {
+	font-size: 13px;
+	font-weight: 400;
+}
+.history-bars {
+	display: flex;
+	gap: 4px;
+	overflow-x: auto;
+	padding: 12px 0;
+}
+.history-day {
+	flex: 1;
+	min-width: 18px;
+	max-width: 65px;
+}
+.history-day small {
+	font-size: 9px;
+	writing-mode: vertical-rl;
+	margin: 6px auto;
+	display: block;
+}
+.history-bar {
+	height: 65px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 3px;
+	overflow: hidden;
+	border: 1px solid #cbd5d0;
+}
+.sample-success {
+	background: #379878;
+}
+.sample-failure {
+	background: #ca6666;
+}
+.sample-unknown {
+	background: #b9c3be;
+}
+.sample-unmonitored {
+	flex: 1;
+	background: #f6f8f6;
+}
+.endpoint-detail {
+	border-top: 1px solid #e0e8e3;
+	padding: 16px 0;
+	font-size: 13px;
+}
+.endpoint-detail .url {
+	overflow-wrap: anywhere;
+	display: block;
+}
+.endpoint-detail small {
+	display: inline-block;
+}
+.endpoint-detail dl {
+	display: grid;
+	grid-template-columns: 110px 1fr;
+	gap: 8px;
+}
+.endpoint-detail dd {
+	margin: 0;
+}
+.endpoint-detail dt {
+	color: #63756d;
+}
+.monitor-settings {
+	margin-top: 24px;
+}
+.monitor-settings .panel-head > div {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+.monitor-settings p {
+	font-size: 13px;
+	line-height: 1.7;
+}
+.editor .check-label {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+}
+.editor .check-label input {
+	width: auto;
+}
+@media (max-width: 800px) {
+	.monitor-stats {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.monitor-row {
+		grid-template-columns: 1fr 1fr;
+	}
+	.monitor-row > div:last-child {
+		grid-column: 1 / -1;
+	}
+	.monitor-row > div:last-child span {
+		font-size: 12px;
+	}
+}
+@media (max-width: 480px) {
+	.monitor-stats {
+		gap: 6px;
+	}
+	.monitor-stats article {
+		padding: 12px;
+	}
+	.monitor-stats strong {
+		font-size: 24px;
+	}
+	.monitor-settings .panel-head {
+		align-items: start;
+		flex-direction: column;
+	}
+	.endpoint-detail dl {
+		grid-template-columns: 90px 1fr;
+	}
+	.history {
+		padding: 16px;
+	}
+}
+
+.history,
+.monitor-settings {
+	padding: 24px;
+}
+.history > .panel-head,
+.monitor-settings > .panel-head {
+	padding: 0 0 18px;
+	margin-bottom: 18px;
+}
+.overline {
+	text-decoration: none;
+}
+.skip {
+	width: 1px;
+	height: 1px;
+	clip-path: inset(50%);
+	overflow: hidden;
+}
+.skip:focus {
+	width: auto;
+	height: auto;
+	clip-path: none;
+	overflow: visible;
+}
+.history-bars {
+	border: 0;
+	margin: 0;
 }

@@ -1,6 +1,6 @@
 # Lean MVP architecture
 
-Current design revision 2, 31 October 2026. Approved direction: internal monitoring with minimal recurring cost. Implementation and deployment remain unauthorized.
+Current design revision 2, 31 October 2026. Approved direction: internal monitoring with minimal recurring cost. Local Phase01 and Phase02 implementation are authorized; deployment remains unauthorized.
 
 ```mermaid
 flowchart LR
@@ -31,4 +31,9 @@ A 15-minute poll may miss short outages; confirmation across two consecutive fai
 
 Infrastructure automation is conditional: permission, known price, shared allowance headroom and bounded queries must all be proven. Manual observations keep their method/source age and cannot turn unknown automatic availability green. Reports compute from stored evidence; no AI conclusions.
 
-The local Phase 01 foundation is implemented in apps/web. Native PostgreSQL 18 hosts isolated development and test databases. The finite job command exits disabled. The [Phase 01 report](../reports/phase-01-report.md) distinguishes verified routes from future collection, QA and reporting functions.
+The local Phase 01 foundation is implemented in apps/web. Native PostgreSQL 18 hosts isolated development and test databases. The default job exits disabled; the explicit disposable fixture command executes the implemented finite collector. The [Phase 01 report](../reports/phase-01-report.md) distinguishes verified routes from future collection, QA and reporting functions.
+
+
+## Phase 02 implementation
+
+Shared monitoring modules provide the executor, deterministic state/history calculations, transactionally stored runs/checks/outage events and bounded retention. Migration003 adds monitoring domains to the existing database and a restricted collector identity; it introduces no service or persistent worker. Admin target configuration cannot write owner approvals or observations. Live network execution remains disabled; local HTTP/TLS fixtures use an exact test-only capability and an isolated test database. See [implementation and commands](../operations/availability-monitoring.md). Basic offline-approved maintenance intervals support calculations; full incidents and operational maintenance UI remain Phase04.
