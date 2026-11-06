@@ -2,7 +2,7 @@
 
 ## Overview
 
-Revision 2 design, not a code audit. The user-supplied [lean brief](../requirements/lean-architecture.md) replaces the larger runtime. The repository contains planning files and no application handlers, credentials, migrations or deployed consumers. The independent offline architecture review confirmed this and identified finite-job cost/overlap, direct-executor SSRF, manual provenance and authenticated-but-internet-facing ingress as the relevant lean boundaries. No vulnerability or effective deployed control is asserted.
+Historical revision2 design followed by the Phase 02 control reconciliation below. The user-supplied [lean brief](../requirements/lean-architecture.md) replaces the larger runtime. At the revision2 design review, the repository contained planning files and no application handlers or migrations. Phase 01/02 code now exists locally; there is still no authorized deployment. The independent offline architecture review confirmed this and identified finite-job cost/overlap, direct-executor SSRF, manual provenance and authenticated-but-internet-facing ingress as the relevant lean boundaries. No vulnerability or effective deployed control is asserted.
 
 | Proposed component | Evidence / responsibility |
 | --- | --- |
@@ -31,7 +31,7 @@ Security objectives: all operational content private; server role/environment en
 
 ## Attack Surface, Mitigations, and Attacker Stories
 
-All scenarios are conditional design hypotheses. No application exists to prove exploitability or protection.
+The following table preserves the original design hypotheses and pre-implementation evidence. Use the current control reconciliation below for implemented controls; it is not a deployed-security claim.
 
 | Priority | Scenario and capability gain | Prerequisite / impact | Existing control evidence | Mitigation and required test |
 | --- | --- | --- | --- | --- |
@@ -53,3 +53,14 @@ All scenarios are conditional design hypotheses. No application exists to prove 
 Critical requires evidence of unprivileged remote execution or broad production credential/administrative compromise, not merely a design concern. High can include confirmed unauthorized staff access, exploitable metadata SSRF with useful credential reach, or cross-environment privileged mutation. Medium covers meaningful bounded confidentiality/integrity/cost/availability failures; low is limited non-sensitive exposure without significant new capability. Restrictive network/identity controls can change impact only when verified. Authorized manual assertions and already-held administrator powers are not automatic vulnerabilities.
 
 Remaining proof gaps: actual targets, IdP/MFA, query costs/headroom, job retry/timeout/start behavior, DB grants/TLS, QA contract, import implementation, private route/caching tests and restore capability. Same-provider/single-node outages and no independent alert while the app is down remain explicit release risks. No scan or external security testing was performed in this revision.
+
+
+## Phase 02 control reconciliation · 6 November 2026
+
+The threat boundaries above remain applicable. Current evidence supersedes their historical “None” cells for local identity, database and probing paths. Auth/session/environment/CSRF regressions pass against the actual app. Monitor configuration is admin-only; web grants cannot approve targets or rewrite observations. The collector has separate credentials; offline approvals are exact URLs and audited. Live default execution is disabled. Tests use only disposable databases and controlled local targets.
+
+The actual Node request path disables redirect/proxy/agent reuse, bounds total attempt time and64KiB response bytes, discards bodies and verifies TLS. DNS validation rejects all forbidden A/AAAA answers before selecting a pinned address; hostname/SNI remains the approved host. Exact fixture capability applies only to literal127.0.0.1 on an approved test DB and is not available through web inputs. Controlled HTTP/TLS tests verify response, redirect, size, timeout and certificate behavior; injected resolver tests cover private/mixed/mapped/rebinding answers. No live public-target or production DNS path was probed.
+
+Dedicated advisory lock/unique slot prevents duplicate requests. Lost connection aborts I/O/commit and leaves unknown evidence. Finite limits and a standalone process watchdog bound local work; remote scheduling, provider timeout and billing enforcement remain unverified. Daily counts preserve failures, missing periods and maintenance; no missing sample becomes green. Unauthorized API reads/writes, environment leakage, invalid cursors/ranges, approvals, role grants and revision conflicts are covered by local tests.
+
+Remaining risks: privileged DB/host owners can change evidence; no independent tamper-proof log or out-of-provider alert. The local app's current database connector intentionally rejects managed/production targets; hosted TLS/network controls, real organization/MFA enrollment and production target permissions are separate release gates. Comprehensive1GiB workload, long-duration process/billing behavior and managed recovery remain Phase 05 evidence. This update records implemented controls and tests; it is not an exhaustive vulnerability scan or production certification.

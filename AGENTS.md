@@ -1,6 +1,11 @@
 # Repository instructions
 
-**Current scope (5 November 2026).** Phase 00 documentation was published. The owner authorized the local Phase 01 foundation, quality harness and branch phase-01/foundation. Stop at the acceptance gate. Commit, push, merge, deployment and Phase 02 require separate approval. Read [GOALS](GOALS.md), [PLANS](PLANS.md), [lean requirements](docs/requirements/lean-architecture.md) and applicable designs first. The lean brief supersedes conflicting v1 requirements; `docs/archive/` and ADRs marked superseded are historical, not active instructions.
+**Current scope (6 November 2026).** Phase 01 was accepted and merged through PR #1 at f9423c0. The owner authorized Phase 02 local availability monitoring on phase-02/availability-monitoring. Stop at its acceptance gate. The owner has authorized committing/pushing Phase 02 and opening its review PR. Merge, deployment, live targets and Phase 03 still require separate approval. Read GOALS, PLANS, lean requirements and applicable designs first. Historical archives are not active instructions.
+
+## Git review workflow
+
+Branch from reviewed main. Preserve existing changes and meaningful history. Every merge to main requires a PR and owner review/approval; never automatically merge or force-push main. Prepare changes and evidence locally, scan for secrets, then request commit/push authorization if not already granted for that work. After authorized feature-branch publication, open its review PR with database/API/security/test/browser/documentation evidence and the phase report. Previous-phase publication permission does not authorize a new phase's push.
+
 
 - Inspect source and Git state; make small scoped changes and preserve unrelated user work.
 - Active MVP: one internal Next.js service, one small single-node PostgreSQL, one finite 15-minute scheduled job. No always-running collector, public publishing, extra monitoring servers or runtime AI.

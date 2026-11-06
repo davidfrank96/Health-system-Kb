@@ -225,7 +225,8 @@ test("inventory shows a slow database read, recovers from the actual timeout, an
 		// Only the disposable test database is eligible. The web query has a 5s statement timeout.
 		await owner.query("BEGIN");
 		await owner.query("LOCK TABLE services IN ACCESS EXCLUSIVE MODE");
-		await page.goto("/application-status");
+		// Inventory management moved to Settings when Application Status gained real monitoring.
+		await page.goto("/settings-integrations");
 		await expect(page.getByText("Loading service inventory…")).toBeVisible();
 		await expect(
 			page.getByText("The service inventory could not be loaded."),

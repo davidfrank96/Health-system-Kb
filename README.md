@@ -2,7 +2,7 @@
 
 An internal dashboard for approved Kbean staff: sampled application availability, supported infrastructure readings, QA results, incidents and historical reports.
 
-**Phase 01 local foundation is ready for owner review.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
+**Phase 02 availability monitoring is implemented locally; acceptance review is pending.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
 
 Start with the [revised Phase 00 report](docs/architecture/phase-00-report.md), [change summary](docs/architecture/change-summary.md), [cost estimate](docs/deployment/cost-estimate.md) and [approval register](harness/context/decisions-and-open-questions.md).
 
@@ -31,3 +31,7 @@ corepack pnpm local
 ```
 
 Open the loopback URL printed by the launcher, continue to sign in and choose a synthetic local identity. Choose admin to add/edit services under Settings & Integrations. Ctrl-C stops the app, issuer and database while preserving the development inventory. The [database guide](docs/database/local-development.md) covers installation, migrations, environment variables, tests, reset and recovery. The [acceptance report](docs/reports/phase-01-report.md) records the results.
+
+## Phase 02 availability
+
+Overview and Application Status read actual stored monitoring observations; Settings manages disabled targets and approved configuration. The [monitoring guide](docs/operations/availability-monitoring.md) covers the controlled job, exact target approval, health/history semantics, limits, native testing and troubleshooting. Run `corepack pnpm job:fixtures` for a disposable HTTP-to-PostgreSQL scenario. Live checks and cloud integrations remain disabled. See the [Phase 02 report](docs/reports/phase-02-report.md) before approval or publication.

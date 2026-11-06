@@ -33,3 +33,10 @@ No production risk has been formally accepted and the quality addendum covers lo
 On 5 November 2026 the project owner authorized local Phase 01 engineering-quality work against published baseline `74fa0f1`: test dependencies, disposable DB/browser fixtures, PR workflow preparation and milestone/phase reporting. Hosted CI usage, product rollout and external infrastructure changes require their applicable gates.
 
 Subsequent owner decision, 5 November: L12 covers the Phase 01 application, a local development branch and native PostgreSQL development/testing. The later native decision supersedes the interim managed-only direction. Existing PostgreSQL 18 binaries were reused; Postgres.app is the preferred macOS installation. No commit, push, merge, provisioning, external database connection, deployment or Phase 02 is authorized.
+
+
+## Phase 02 authority and decisions · 6 November 2026
+
+Owner execution prompt authorized local Phase02 after baseline verification. Phase01 merged via PR#1 at f9423c0 and hosted CI passed; all88 baseline tests reran successfully. Branch phase-02/availability-monitoring is local. The instruction explicitly requires separate feature-branch publication approval and owner-reviewed PR before merge. No cloud, deployment, live target, paid API or Phase03 authority exists.
+
+Retain lean two-failure/two-success and35m freshness policies. Safe configurable thresholds preserve those defaults. Daily per-endpoint96-slot summaries are a small implementation refinement to preserve partial-day and historically-required service arithmetic; no additional service/table pipeline. Minimal offline future maintenance evidence supports Phase02 without implementing Phase04 incidents. Pure local fixtures are the only execution capability. Native PostgreSQL18 decision remains unchanged.

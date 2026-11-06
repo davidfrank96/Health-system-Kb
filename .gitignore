@@ -158,3 +158,6 @@ vite.config.ts.timestamp-*
 
 # Native development cluster and machine-only credentials
 /.local/
+
+# Local visual verification artifacts; selected redacted evidence is copied to docs.
+/output/

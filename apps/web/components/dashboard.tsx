@@ -1,3 +1,4 @@
+import { Monitoring, MonitorSettings } from "./monitoring";
 import Link from "next/link";
 import type { Staff } from "../lib/security";
 import { Brand } from "./brand";
@@ -121,6 +122,13 @@ export function DashboardView({
 						))}
 					</nav>
 				)}
+				{(section === "overview" || section === "application-status") && (
+					<Monitoring
+						key={section + env}
+						env={env}
+						overview={section === "overview"}
+					/>
+				)}
 				{message ? (
 					<section className="panel">
 						<h2>{message[0]}</h2>
@@ -129,10 +137,18 @@ export function DashboardView({
 							<p>{message[2]}</p>
 						</div>
 					</section>
-				) : (
+				) : section === "settings-integrations" ? (
 					<Inventory
 						key={section + env}
 						section={active.slug}
+						env={env}
+						admin={membership.role === "admin"}
+						csrf={csrf}
+					/>
+				) : null}
+				{section === "settings-integrations" && (
+					<MonitorSettings
+						key={env}
 						env={env}
 						admin={membership.role === "admin"}
 						csrf={csrf}

@@ -12,7 +12,7 @@ try {
 		if (rows[0].count !== 1)
 			throw new Error("Upgrade failed to preserve identity");
 		console.log(
-			"Populated v1 database upgraded to v2 and replayed successfully.",
+			"Populated v1 database upgraded to v3 and replayed successfully.",
 		);
 	}
 } finally {

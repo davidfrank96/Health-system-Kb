@@ -1,7 +1,7 @@
 import type { PoolConfig } from "pg";
 export function connectionOptions(
 	env: Record<string, string | undefined>,
-	purpose?: "web" | "migrator",
+	purpose?: "web" | "migrator" | "collector",
 ): PoolConfig;
 export function requireApprovedTest(
 	env: Record<string, string | undefined>,

@@ -170,7 +170,7 @@ export function Inventory({ env, section, admin, csrf }: Props) {
 										{s.product} · {s.owner}
 									</small>
 								</div>
-								<span className="pill">Unknown</span>
+								<span className="pill">Unverified</span>
 								{manage && (
 									<button
 										type="button"

@@ -29,3 +29,8 @@ CSV preview/commit and provenance are defined in [manual-imports](../integration
 Reports are synchronous bounded queries over stored evidence. Summary JSON supports the internal HTML UI; export streams private CSV with source method/observed time/coverage/method version and formula protection. No report object storage, report IDs/jobs, signed public URLs or external document service. Expensive/unbounded requests are rejected; narrowing period is the fallback.
 
 See the native database guide for owner approval and migrations, and the acceptance report for test evidence. These are local framework decisions, not authorization for infrastructure. The lean contract intentionally removes asset/public-revision/alert-delivery endpoints from the prior draft; no existing clients exist to migrate. Breaking future semantics require versioning and tests.
+
+
+## Phase 02 implemented contract
+
+Version0.4.0 marks five more implemented operations: GET/POST endpoints, PATCH endpoints/{id}, GET status/overview and GET status/history. These extend the existing catch-all route; there is no probing API. Configuration uses expectedCodes, failureThreshold/recoveryThreshold and slowMs/clearMs; owner approval fields are response-only. Endpoint creation starts disabled. Canonical URL change removes approval. ServiceId is optional on the endpoint list, mandatory on history. All list/history pages cap limit100; signed cursors bind actor/scope/query. History requires UTC start/end within90days; fractions are0–1 and displayed as percentages. Outage results are capped100 with an explicit truncation flag. OpenAPI describes the exact local response shapes; unimplemented later-phase operations remain labeled accordingly.

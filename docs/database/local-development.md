@@ -67,3 +67,10 @@ corepack pnpm local
 To recover, stop the app, move the new directory aside and move the saved directory back to `.local/postgres18`. If an unclean shutdown leaves a launcher lock, check `pg_ctl -D "$PWD/.local/postgres18/data" status` and confirm no launcher is using that directory. Stop only that owned cluster with `pg_ctl -D "$PWD/.local/postgres18/data" -m fast -w stop` if necessary, then remove the **empty** lock directory with `rmdir .local/postgres18/launcher.lock`. Never point reset or restore operations at a shared or production database.
 
 The [PR workflow](../../.github/workflows/quality.yml) supplies an isolated PostgreSQL 18 service on the hosted runner's loopback interface with synthetic bootstrap credentials. The launcher verifies server major 18, refuses a pre-existing test database, creates restricted identities, and runs the same migration, integration and authenticated app tests. The dump/restore check runs in the native branch. GitHub disposes of the CI service after the job. Local development has no Docker or Compose dependency.
+
+
+## Phase 02 collector and monitoring tests
+
+The native launcher now creates a third, restricted collector login alongside web and migrator, with its own generated password. Existing persistent development databases gain that role without recreating the database; credentials remain under ignored .local storage. The web environment excludes both privileged identities. Migration003 preserves existing users/services/endpoints and adds monitoring tables. No persistent development instance was reset during Phase02 verification.
+
+Use `pnpm job:fixtures` for the explicit disposable collection scenario and `pnpm test:db` for HTTP→PostgreSQL→actual-browser verification. The fixture command stops all owned resources and deletes its test cluster; it does not reset development. Offline approval/maintenance templates, retention and recovery are in the [monitoring guide](../operations/availability-monitoring.md). CI continues using its isolated PostgreSQL18 service; no local Docker requirement was introduced.

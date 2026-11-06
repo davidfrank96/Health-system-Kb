@@ -25,7 +25,11 @@ try {
 				"Refusing to reuse an existing test database or unexpected development owner.",
 			);
 	} else {
-		for (const role of [web, migrator]) {
+		for (const role of [
+			web,
+			migrator,
+			connectionOptions(process.env, "collector"),
+		]) {
 			const { rows } = await admin.query(
 				"SELECT format('CREATE ROLE %I LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD %L',$1::text,$2::text) AS ddl",
 				[role.user, role.password],
@@ -38,7 +42,22 @@ try {
 			`REVOKE CONNECT, TEMPORARY ON DATABASE ${web.database} FROM PUBLIC`,
 		);
 		await admin.query(
-			`GRANT CONNECT ON DATABASE ${web.database} TO ${web.user}`,
+			`GRANT CONNECT ON DATABASE ${web.database} TO ${web.user}, ${web.database}_collector`,
+		);
+	}
+	// Existing development databases gain only the new restricted collector login.
+	const collector = connectionOptions(process.env, "collector");
+	const role = await admin.query("SELECT 1 FROM pg_roles WHERE rolname=$1", [
+		collector.user,
+	]);
+	if (!role.rowCount) {
+		const ddl = await admin.query(
+			"SELECT format('CREATE ROLE %I LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE PASSWORD %L',$1::text,$2::text) AS ddl",
+			[collector.user, collector.password],
+		);
+		await admin.query(ddl.rows[0].ddl);
+		await admin.query(
+			`GRANT CONNECT ON DATABASE ${web.database} TO ${collector.user}`,
 		);
 	}
 } finally {

@@ -62,3 +62,10 @@ Maintain one report per phase at `docs/reports/phase-XX-report.md` from Phase 01
 | F. Phase acceptance | Criterion-by-criterion evidence, blockers, repository/branch status and readiness for owner review |
 
 Accept only when the approved features work, required tests ran, critical failures are resolved, phase security controls are validated, current docs and known limitations are recorded, and the report is reviewable. Keep the gate open where proof is missing. Stop before the next phase until it is explicitly authorized.
+
+
+## Phase 02 additions
+
+The [monitoring guide](../operations/availability-monitoring.md) documents the native fixture and database commands. Unit tests include actual controlled HTTP/TLS requests as well as pure classifications, IP/DNS rejection and count arithmetic. PostgreSQL tests execute the finite runner with real endpoints, overlap/duplicate/connection-loss paths,20 targets and40 attempts, migrations/permissions, downtime/recovery and retained history. Browser tests run the built app against stored controlled collection results, use signed synthetic staff login, and exercise config/approval/RBAC/API/error/retry/history at desktop/mobile sizes. The prior inventory-timeout test follows inventory management to Settings; its assertions remain and a separate actual-DB monitoring-timeout test is added. No suite is silently skipped.
+
+Phase 02 uses the owner's expanded A–K report format in docs/reports/phase-02-report.md, including executive/implementation/architecture/database/security/tests/application/Git/documentation/limitations/acceptance sections. Checkpoints A–D update the build log and owner throughout. Hosted Phase 01 workflow41954771693 passed; Phase 02 hosted evidence remains pending publication approval. Test screenshots/traces contain only synthetic local data and must still be reviewed before publication.

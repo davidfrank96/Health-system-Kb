@@ -1,6 +1,6 @@
 # Lean Phase 01: Foundation
 
-Target: 18 December 2026. Status: local foundation delivered on phase-01/foundation. Acceptance is awaiting owner review.
+Target: 18 December 2026. Status: local foundation delivered on phase-01/foundation. Accepted and merged through PR#1 at f9423c0. Hosted quality workflow passed; Phase02 baseline reran all88 tests.
 
 ## Dependencies
 
