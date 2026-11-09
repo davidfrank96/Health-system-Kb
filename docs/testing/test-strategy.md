@@ -73,3 +73,7 @@ Phase 02 uses the owner's expanded A–K report format in docs/reports/phase-02-
 ## Phase 03 implementation
 
 The Phase 03 suite covers gated fixtures, cumulative CPU normalization, PostgreSQL role/constraint boundaries, corrections, retention, actual API imports and responsive history. Browser evidence uses synthetic inventory and a controlled DigitalOcean response. Run the commands in the [infrastructure guide](../operations/infrastructure-health.md); see [acceptance results](../reports/phase-03-report.md).
+
+## Phase 04 verification
+
+Run the commands in the [operator guide](../operations/qa-incidents-reports.md). The database suite covers populated v4 upgrade, migration replay, grants, transactional QA races/rollback, maintenance slot reconciliation and weighted reports. Authenticated Playwright uses a real loopback app, isolated PostgreSQL and synthetic identities, checks HMAC responses and 503 retry, concurrent revisions, export bytes and audit, and captures synthetic evidence at mobile/desktop widths. A forced table lock tests timeout and recovery without relying on mocks. Public/browser component tests and OpenAPI checks are reported separately. Safe test limits and actual results are recorded in the [acceptance report](../reports/phase-04-report.md).

@@ -30,3 +30,5 @@ L01-1 through L01-5 are implemented locally. See the Phase 01 report for execute
 Unknown-cost optional providers do not block core HTTPS/manual use; keep them visibly disabled. No task includes a permanent remote staging stack, public API, paid integration, queue service or runtime AI. Additions need a new scope/budget decision.
 
 Phase 03 local delivery and verification of L03-1 through L03-4 are recorded in the [acceptance report](../../docs/reports/phase-03-report.md). Account permissions, allowance evidence and bounded live validation remain owner decisions.
+
+L04-1–L04-3 are implemented for local review on phase-04/qa-incidents-reports. The sender is verified only against controlled fixtures; the optional read API and live activation are deferred until owner approval. See the [Phase 04 report](../../docs/reports/phase-04-report.md).

@@ -68,3 +68,7 @@ Remaining risks: privileged DB/host owners can change evidence; no independent t
 ## Phase 03 implementation
 
 A write-enabled token, broad resource selector, ambiguous result matrix or stale cost evidence risks data exposure or spend. Only exact offline approvals reach a bounded request reservation. The web process receives no provider secret. UTF-8 decoding, byte/row/field caps, closed metric descriptors and safe reference text protect import ingestion. Raw source text is escaped in React and never fetched. Database insertion views enforce provenance, even when a caller bypasses form validation.
+
+## Phase 04 control reconciliation
+
+The new sender surface is disabled outside disposable fixtures. Exact raw-byte verification, expiring scoped rotating keys, shared single-process request budgets, bounded input and transactional source identities limit forgery and replay. Signed duplicates cannot replace original evidence. Staff writes check scope, CSRF/Origin and idempotency. Incident references are checked against their source service/environment, including approved security references. UTC range caps, row/byte ceilings, quoted CSV cells, formula-prefix protection and no-store responses constrain exports. Authorized staff can still write incorrect statements or copy an export; provenance and audit make those actions attributable. No live QA trust agreement or multi-instance rate limiter is asserted.

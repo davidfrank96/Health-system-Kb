@@ -23,6 +23,37 @@ if (!interactive) {
 	await monitoringFixture(owner);
 	await infrastructureFixture(owner);
 }
+const fixtureService = interactive
+	? null
+	: (
+			await owner.query(
+				"SELECT id FROM services WHERE name='Fixture infrastructure' AND environment='development'",
+			)
+		).rows[0].id;
+const fixtureSecret = randomBytes(32).toString("hex"),
+	previousSecret = randomBytes(32).toString("hex");
+const fixtureQA = interactive
+	? {}
+	: {
+			KBEAN_QA_EVIDENCE_HOSTS: "qa.example.invalid",
+			KBEAN_QA_CADENCES: JSON.stringify({
+				[JSON.stringify(["development", fixtureService, "Checkout smoke"])]: 60,
+			}),
+			KBEAN_QA_FIXTURE_CONFIG: JSON.stringify({
+				source: "synthetic-qa",
+				environment: "development",
+				serviceIds: [fixtureService],
+				keys: [
+					["current", fixtureSecret],
+					["previous", previousSecret],
+				].map(([id, secret]) => ({
+					id,
+					secret,
+					from: new Date(Date.now() - 10000).toISOString(),
+					until: new Date(Date.now() + 3600000).toISOString(),
+				})),
+			}),
+		};
 const reservation = createServer();
 reservation.listen(interactive ? 3000 : 0, "127.0.0.1");
 await once(reservation, "listening");
@@ -77,6 +108,7 @@ try {
 		["start", "apps/web", "--hostname", "127.0.0.1", "--port", String(port)],
 		{
 			...webEnv,
+			...fixtureQA,
 			NODE_ENV: "production",
 			APP_ORIGIN: origin,
 			OIDC_ISSUER: issuer,
@@ -105,6 +137,9 @@ try {
 		const browser = run("playwright", ["test", ...process.argv.slice(3)], {
 			...process.env,
 			KBEAN_BROWSER_DB: "approved",
+			KBEAN_TEST_QA_SECRET: fixtureSecret,
+			KBEAN_TEST_QA_PREVIOUS: previousSecret,
+			KBEAN_TEST_QA_SERVICE: fixtureService,
 			KBEAN_TEST_ISSUER: issuer,
 			KBEAN_TEST_SUBJECT: `${clientId}/operator`,
 			KBEAN_TEST_ORIGIN: origin,

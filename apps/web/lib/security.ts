@@ -91,7 +91,7 @@ export function roleFor(staff: Staff, env: Environment) {
 	if (!membership) throw new HttpError(403, "environment_denied");
 	return membership.role;
 }
-export async function boundedBody(req: Request, max = 65536) {
+export async function boundedBytes(req: Request, max = 65536) {
 	if (Number(req.headers.get("content-length")) > max)
 		throw new HttpError(413, "body_too_large");
 	const reader = req.body?.getReader();
@@ -108,10 +108,12 @@ export async function boundedBody(req: Request, max = 65536) {
 		}
 		chunks.push(value);
 	}
+	return Buffer.concat(chunks);
+}
+export async function boundedBody(req: Request, max = 65536) {
+	const bytes = await boundedBytes(req, max);
 	try {
-		return new TextDecoder("utf-8", { fatal: true }).decode(
-			Buffer.concat(chunks),
-		);
+		return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 	} catch {
 		throw new HttpError(400, "invalid_encoding");
 	}

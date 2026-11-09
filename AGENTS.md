@@ -1,6 +1,6 @@
 # Repository instructions
 
-**Current scope (9 November 2026).** Phase 02 merged through PR #2 at be8d2eb. Phase 03 local implementation and fixture tests are authorized on phase-03/infrastructure-health. Stop for owner review before publication or any live collection.
+**Current scope.** PR #3 merged Phase 03 at 4156c0b after hosted CI passed. Phase 04 local QA, incident, maintenance and reporting work is authorized on phase-04/qa-incidents-reports. Publication, live integrations and deployment require separate approval.
 
 ## Git review workflow
 

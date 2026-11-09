@@ -1,4 +1,11 @@
 @import "tailwindcss";
+.report-measures > div {
+	display: grid;
+	gap: 0.2rem;
+	padding: 0.75rem 1rem;
+	background: #f1f7f5;
+	border-radius: 0.5rem;
+}
 :root {
 	color-scheme: light;
 	--ink: #182f32;
@@ -653,12 +660,37 @@ button.service-link {
 	align-items: center;
 	gap: 9px;
 }
-.metric-form { display:grid; gap:.8rem; margin-top:1rem; max-width:42rem; }
-.metric-form label {display:grid;gap:.3rem}
-.metric-form input,.metric-form select,.metric-form textarea {max-width:100%;min-width:0}
-.panel article {margin-block:.8rem;padding-block:.5rem;border-top:1px solid #d4dce1;overflow-wrap:anywhere}
-.panel details {overflow-wrap:anywhere}
+.metric-form {
+	display: grid;
+	gap: 0.8rem;
+	margin-top: 1rem;
+	max-width: 42rem;
+}
+.metric-form label {
+	display: grid;
+	gap: 0.3rem;
+}
+.metric-form input,
+.metric-form select,
+.metric-form textarea {
+	max-width: 100%;
+	min-width: 0;
+}
+.panel article {
+	margin-block: 0.8rem;
+	padding-block: 0.5rem;
+	border-top: 1px solid #d4dce1;
+	overflow-wrap: anywhere;
+}
+.panel details {
+	overflow-wrap: anywhere;
+}
 
+.ops-filters input,
+.ops-filters select {
+	min-width: 0;
+	max-width: 100%;
+}
 .editor .check-label input {
 	width: auto;
 }
@@ -725,4 +757,68 @@ button.service-link {
 .history-bars {
 	border: 0;
 	margin: 0;
+}
+
+.ops-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.8rem;
+	margin-block: 1rem;
+}
+.ops-filters label {
+	display: grid;
+	gap: 0.25rem;
+	max-width: 100%;
+}
+
+.panel article,
+.metric-form {
+	overflow-wrap: anywhere;
+}
+
+.ops-panel {
+	--inset: clamp(1rem, 2.5vw, 1.5rem);
+	padding: 0 var(--inset) var(--inset);
+	overflow-wrap: anywhere;
+}
+.ops-panel > h2 {
+	margin-inline: calc(-1 * var(--inset));
+	margin-bottom: 1rem;
+	padding-inline: var(--inset);
+}
+.ops-panel :is(select, input, textarea) {
+	border: 1px solid var(--line);
+	border-radius: 0.35rem;
+	padding: 0.4rem 0.55rem;
+	background-color: white;
+	max-width: 100%;
+	min-width: 0;
+}
+.ops-panel summary {
+	cursor: pointer;
+	color: var(--accent);
+}
+.ops-panel article p,
+.ops-panel article small {
+	margin-block: 0.25rem;
+}
+.ops-panel article a {
+	text-decoration: underline;
+}
+.report-measures {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+	gap: 0.8rem;
+	margin-block: 1rem;
+}
+.report-measures span {
+	font-size: 0.875rem;
+}
+.report-measures strong {
+	font-size: 1.35rem;
+}
+.report-measures meter {
+	width: 100%;
+	height: 0.6rem;
+	accent-color: var(--accent);
 }

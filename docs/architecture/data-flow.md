@@ -38,3 +38,7 @@ The reusable runner currently accepts only an approved disposable test database 
 ## Phase 03 implementation
 
 The provider fixture traverses the collector read adapter, fixed resource gate, atomic budget reservation and provider-only insertion view. The staff path uses session, environment and CSRF checks, validates the entire submission, then inserts batch, readings and audit in one transaction. Both paths feed the infrastructure API. Availability tables are independent.
+
+## Phase 04 paths
+
+Fixture sender → bounded raw-byte signature → independent service/environment scope → transaction (run, event identity, audit). Manual form or JSON → staff session, Origin/CSRF, role and scope → separate manual identity and audit. Staff incident notes → scoped evidence lookup → version-checked append. Report request → scoped, repeatable PostgreSQL snapshot → private HTML or bounded, audited CSV. No evidence link is fetched by the application.

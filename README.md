@@ -2,7 +2,7 @@
 
 An internal dashboard for approved Kbean staff: sampled application availability, supported infrastructure readings, QA results, incidents and historical reports.
 
-**Phase 02 merged in PR #2. Phase 03 infrastructure monitoring is implemented for local review.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
+**Phase 03 merged in PR #3. Phase 04 adds QA intake, incident timelines, maintenance and reports for local owner review.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
 
 Start with the [revised Phase 00 report](docs/architecture/phase-00-report.md), [change summary](docs/architecture/change-summary.md), [cost estimate](docs/deployment/cost-estimate.md) and [approval register](harness/context/decisions-and-open-questions.md).
 
@@ -39,3 +39,5 @@ Overview and Application Status read actual stored monitoring observations; Sett
 ## Phase 03 infrastructure health
 
 The [infrastructure guide](docs/operations/infrastructure-health.md) covers resource registration, disposable provider fixtures, manual entry, CSV preview, history and retention. Review the [acceptance report](docs/reports/phase-03-report.md) for test evidence and pending live approvals.
+
+See the [Phase 04 operating guide](docs/operations/qa-incidents-reports.md) for staff workflows, UTC report rules and reproduction commands, and the [acceptance report](docs/reports/phase-04-report.md) for tested results. Real QA and cloud integrations remain disabled.

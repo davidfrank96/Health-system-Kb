@@ -80,3 +80,9 @@ See [retention, migration recovery and commands](../operations/availability-moni
 ## Phase 03 implementation
 
 Migration 004 implements integrations, metric_snapshots and import_batches. Four small supporting tables enforce canonical units, per-resource capabilities, transaction-safe read budgets and daily metric retention. Checked insertion views split web and collector provenance. The previous proposed table count is historical. See [ADR 0009](../decisions/0009-infrastructure-metrics.md) and [retention commands](../operations/infrastructure-health.md).
+
+## Migration 005 — operations
+
+Composite service/environment keys protect QA runs, incidents and existing maintenance. A source/run uniqueness constraint and source/event aliases with raw digests distinguish replay from conflicts. The staff actor is required only for manual QA. Incident updates are keyed by incident and revision; web grants allow insertion, not UPDATE or DELETE of history. Future maintenance edits lock per service, reject overlap and retain cancellation. Existing availability reads ignore cancelled windows.
+
+The collector-only bounded retention function removes up to 250 QA runs, 100 resolved incidents and 100 expired windows older than 367 days per maintenance invocation; delivery aliases and incident notes expire with their parent. Open incidents remain. Earlier monitoring and metric retention rules still apply. No production database was accessed.

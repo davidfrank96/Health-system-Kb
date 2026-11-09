@@ -9,7 +9,7 @@ export async function storeCheck(c, endpoint, runId, slot, check) {
 	const maintenance =
 		(
 			await c.query(
-				"SELECT 1 FROM maintenance_windows WHERE service_id=$1 AND environment=$2 AND starts_at<=$3 AND ends_at>$3 LIMIT 1",
+				"SELECT 1 FROM maintenance_windows WHERE cancelled_at IS NULL AND service_id=$1 AND environment=$2 AND starts_at<=$3 AND ends_at>$3 LIMIT 1",
 				[live.service_id, live.environment, slot],
 			)
 		).rowCount > 0;

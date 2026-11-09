@@ -40,3 +40,7 @@ Collector credentials have no user/membership/configuration write privilege. Fix
 ## Phase 03 implementation
 
 Viewers read environment-scoped resource metadata and readings. Operators and administrators can submit and correct staff evidence. Administrators can disable a scoped resource with CSRF, idempotency key and revision. Only the offline migrator registers mappings. The collector can insert through provider_readings and execute bounded retention. The web role can insert staff observations only through manual_readings.
+
+## Phase 04 implemented locally
+
+Viewer reads scoped QA, incident history, maintenance and reports and may export audited CSV. Operator/Admin can import manual QA and manage incidents and future maintenance within their memberships. An update resolves the stored environment before applying authorization and revision checks. The webhook has no staff session or role: its independent credential can submit only for the configured service IDs and environment. Web cannot rewrite QA, past incident updates or audit history.

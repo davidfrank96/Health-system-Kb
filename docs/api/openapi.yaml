@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: Kbean internal health API
-  version: 0.5.0-infrastructure
-  description: Phase 01 staff access, Phase 02 availability and Phase 03 local infrastructure metrics are implemented. Other operations
+  version: 0.6.0-operations
+  description: Phase 01 staff access, Phase 02 availability and Phases 03–04 local infrastructure and operational evidence are implemented. Other operations
     remain planned. Staff-only operations; live collection disabled. Fractions in monitoring availability
     range from 0 to 1.
 servers:
@@ -1745,8 +1745,8 @@ paths:
     get:
       operationId: listIncidents
       summary: listIncidents
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -1757,7 +1757,7 @@ paths:
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -1833,8 +1833,8 @@ paths:
     post:
       operationId: createIncident
       summary: createIncident
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -1843,7 +1843,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '201':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -1923,11 +1923,100 @@ paths:
             schema:
               $ref: '#/components/schemas/IncidentInput'
   /api/v1/incidents/{id}/updates:
+    get:
+      operationId: listIncidentUpdates
+      summary: listIncidentUpdates
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Id'
+      - $ref: '#/components/parameters/Environment'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncidentTimelinePage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
     post:
       operationId: updateIncident
       summary: updateIncident
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -1938,7 +2027,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2021,8 +2110,8 @@ paths:
     get:
       operationId: listMaintenance
       summary: listMaintenance
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -2033,7 +2122,7 @@ paths:
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2109,8 +2198,8 @@ paths:
     post:
       operationId: createMaintenance
       summary: createMaintenance
-      description: UNIMPLEMENTED. Approved service-scoped interval; start<end; authenticated only.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Approved service-scoped interval; start<end; authenticated only.
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -2119,7 +2208,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '201':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2202,9 +2291,8 @@ paths:
     patch:
       operationId: updateMaintenance
       summary: updateMaintenance
-      description: UNIMPLEMENTED. Scope immutable; audited update/recomputation within retained evidence.
-        End may be shortened to cancel remaining future window.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Future windows only. Keep scope immutable; edit the schedule or cancel with cancelled=true.
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -2215,7 +2303,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2293,13 +2381,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MaintenanceInput'
+              oneOf:
+              - $ref: '#/components/schemas/MaintenanceInput'
+              - type: object
+                additionalProperties: false
+                required: [cancelled]
+                properties: {cancelled: {type: boolean, enum: [true]}}
   /api/v1/qa/runs:
     get:
       operationId: listQARuns
       summary: listQARuns
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -2308,9 +2401,14 @@ paths:
       - $ref: '#/components/parameters/Environment'
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
+      - {name: serviceId, in: query, schema: {type: string, format: uuid}}
+      - {name: suite, in: query, schema: {type: string, maxLength: 200}}
+      - {name: status, in: query, schema: {type: string, enum: [passed, failed, error, cancelled]}}
+      - {name: start, in: query, schema: {type: string, format: date-time}}
+      - {name: end, in: query, schema: {type: string, format: date-time}}
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2382,9 +2480,9 @@ paths:
     post:
       operationId: importManualQA
       summary: importManualQA
-      description: UNIMPLEMENTED. Manual provenance. Same run/digest deduplicates, conflicting terminal
+      description: Implemented locally. Manual provenance. Same run/digest deduplicates, conflicting terminal
         result returns 409.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -2392,8 +2490,23 @@ paths:
       - $ref: '#/components/parameters/Csrf'
       - $ref: '#/components/parameters/Key'
       responses:
+        '200':
+          description: Same normalized run already stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QARun'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
         '201':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2471,9 +2584,9 @@ paths:
     post:
       operationId: receiveSignedQARun
       summary: receiveSignedQARun
-      description: UNIMPLEMENTED. <=128 KiB. Synchronous validated DB commit, no async queue. HMAC ±300s
+      description: Implemented locally. <=128 KiB. Synchronous validated DB commit, no async queue. HMAC ±300s
         over timestamp.eventId.rawBody; key binds service/env. Duplicate returns 200.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles: []
       parameters:
       - name: X-Kbean-Key-Id
@@ -2510,7 +2623,7 @@ paths:
                 type: string
                 maxLength: 100
         '201':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2590,8 +2703,8 @@ paths:
     get:
       operationId: listQASecurityReferences
       summary: listQASecurityReferences
-      description: UNIMPLEMENTED. Authorized references from scoped QA summaries; no separate SIEM dataset.
-      x-implementation-status: unimplemented
+      description: Implemented locally. Authorized references from scoped QA summaries; no separate SIEM dataset.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -2600,9 +2713,14 @@ paths:
       - $ref: '#/components/parameters/Environment'
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
+      - {name: serviceId, in: query, schema: {type: string, format: uuid}}
+      - {name: suite, in: query, schema: {type: string, maxLength: 200}}
+      - {name: status, in: query, schema: {type: string, enum: [passed, failed, error, cancelled]}}
+      - {name: start, in: query, schema: {type: string, format: date-time}}
+      - {name: end, in: query, schema: {type: string, format: date-time}}
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2674,9 +2792,9 @@ paths:
     get:
       operationId: getReportSummary
       summary: getReportSummary
-      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance
+      description: Implemented locally. Synchronous bounded stored-data report <=366d; sample and manual provenance
         shown. No report queue/service. Export is audited and safely escaped.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -2695,9 +2813,11 @@ paths:
           - weekly
           - monthly
           - qa
+          - rolling30
+          - history90
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -2769,9 +2889,9 @@ paths:
     get:
       operationId: getReportExport
       summary: getReportExport
-      description: UNIMPLEMENTED. Synchronous bounded stored-data report <=366d; sample and manual provenance
+      description: Implemented locally. Synchronous bounded stored-data report <=366d; sample and manual provenance
         shown. No report queue/service. Export is audited and safely escaped.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -2790,6 +2910,8 @@ paths:
           - weekly
           - monthly
           - qa
+          - rolling30
+          - history90
       responses:
         '200':
           description: Private CSV attachment; no-store; include source/time/coverage and formula protection.
@@ -2807,6 +2929,93 @@ paths:
               schema:
                 type: string
                 maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/reports/attention:
+    get:
+      operationId: getOperationalAttention
+      summary: getOperationalAttention
+      description: Scoped staff operation.
+      x-implementation-status: implemented-local
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationalAttention'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+            ETag:
+              description: Quoted resource revision when returning one resource
+              schema:
+                type: string
+                maxLength: 80
         '400':
           description: Invalid input
           content:
@@ -4113,7 +4322,6 @@ components:
         serviceId:
           type: string
           format: uuid
-          nullable: true
         environment: *id003
         title:
           type: string
@@ -4126,7 +4334,9 @@ components:
           - high
           - medium
           - low
-        startedAt: *id002
+        startedAt: *id004
+        evidence: {$ref: '#/components/schemas/IncidentEvidence'}
+        owner: {type: string, maxLength: 120}
         message:
           type: string
           maxLength: 4000
@@ -4145,7 +4355,6 @@ components:
         serviceId:
           type: string
           format: uuid
-          nullable: true
         environment: *id003
         title:
           type: string
@@ -4164,7 +4373,11 @@ components:
           - identified
           - monitoring
           - resolved
-        startedAt: *id002
+        owner: {type: string}
+        createdBy: *id001
+        createdAt: *id002
+        updatedAt: *id002
+        startedAt: *id004
         resolvedAt: *id004
         version:
           type: integer
@@ -4177,6 +4390,10 @@ components:
       - severity
       - status
       - startedAt
+      - owner
+      - createdBy
+      - createdAt
+      - updatedAt
       - resolvedAt
       - version
     IncidentUpdateInput:
@@ -4188,6 +4405,7 @@ components:
           type: string
           maxLength: 4000
           minLength: 1
+        evidence: {$ref: '#/components/schemas/IncidentEvidence'}
         occurredAt: *id002
       required:
       - status
@@ -4226,6 +4444,8 @@ components:
           maxLength: 200
         startsAt: *id002
         endsAt: *id002
+        reason: {type: string}
+        cancelledAt: *id004
         version:
           type: integer
           minimum: 1
@@ -4236,6 +4456,8 @@ components:
       - title
       - startsAt
       - endsAt
+      - cancelledAt
+      - reason
       - version
     Counts:
       type: object
@@ -4389,7 +4611,6 @@ components:
           type: string
           enum:
           - webhook
-          - api
           - manual
         sourceReference:
           type: string
@@ -4398,6 +4619,7 @@ components:
           type: string
           format: uuid
           nullable: true
+        freshness: {type: string, enum: [fresh, stale, schedule unverified]}
         run:
           $ref: '#/components/schemas/QARunInput'
       required:
@@ -4432,6 +4654,8 @@ components:
           - weekly
           - monthly
           - qa
+          - rolling30
+          - history90
         start: *id002
         end: *id002
         generatedAt: *id002
@@ -4440,10 +4664,14 @@ components:
           enum:
           - lean-v1
         availability:
-          $ref: '#/components/schemas/Availability'
+          $ref: '#/components/schemas/SampleCounts'
         manualSnapshotCount:
           type: integer
           minimum: 0
+        records:
+          type: array
+          maxItems: 5000
+          items: {$ref: '#/components/schemas/ReportRecord'}
         sections:
           type: array
           items:
@@ -4470,6 +4698,7 @@ components:
       - availability
       - manualSnapshotCount
       - sections
+      - records
     AuditEvent:
       type: object
       additionalProperties: false
@@ -4725,11 +4954,24 @@ components:
           items:
             $ref: '#/components/schemas/QARun'
           maxItems: 100
+        totals:
+          type: object
+          required: [runs, passedRuns, failedRuns, passed, failed, skipped, flaky, lastWebhookAt]
+          properties:
+            lastWebhookAt: *id004
+            runs: {type: integer, minimum: 0}
+            passedRuns: {type: integer, minimum: 0}
+            failedRuns: {type: integer, minimum: 0}
+            passed: {type: integer, minimum: 0}
+            failed: {type: integer, minimum: 0}
+            skipped: {type: integer, minimum: 0}
+            flaky: {type: integer, minimum: 0}
         nextCursor:
           type: string
           maxLength: 512
           nullable: true
       required:
+      - totals
       - items
       - nextCursor
     FindingReferencePage:
@@ -4739,7 +4981,14 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/FindingReference'
+            type: object
+            required: [finding, runId, serviceId, sourceMethod, observedAt]
+            properties:
+              finding: {$ref: '#/components/schemas/FindingReference'}
+              runId: *id001
+              serviceId: *id001
+              sourceMethod: {type: string, enum: [manual, webhook]}
+              observedAt: *id002
           maxItems: 100
         nextCursor:
           type: string
@@ -4875,3 +5124,55 @@ components:
       additionalProperties: false
       properties: *id045
       required: *id046
+
+    IncidentEvidence:
+      type: array
+      maxItems: 10
+      items:
+        oneOf:
+        - {type: object, additionalProperties: false, required: [type, id], properties: {type: {type: string, enum: [downtime, metric, qa]}, id: *id001}}
+        - {type: object, additionalProperties: false, required: [type, id, slot], properties: {type: {type: string, enum: [check]}, id: *id001, slot: *id002}}
+        - {type: object, additionalProperties: false, required: [type, url], properties: {type: {type: string, enum: [security]}, url: {type: string, format: uri}}}
+    IncidentTimelinePage:
+      type: object
+      required: [items, nextCursor]
+      properties:
+        nextCursor: {type: string, nullable: true}
+        items:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            required: [version, actor, occurredAt, recordedAt, status, message, evidence]
+            properties:
+              version: {type: integer}
+              actor: *id001
+              occurredAt: *id002
+              recordedAt: *id002
+              status: *id022
+              message: {type: string}
+              evidence: {$ref: '#/components/schemas/IncidentEvidence'}
+    OperationalAttention:
+      type: object
+      required: [observedAt, activeDowntime, openIncidents, maintenance, metrics, qaFailures]
+      properties:
+        observedAt: *id002
+        activeDowntime: {type: integer, minimum: 0}
+        openIncidents: {type: integer, minimum: 0}
+        maintenance: {type: integer, minimum: 0}
+        metrics: {type: integer, minimum: 0}
+        qaFailures: {type: integer, minimum: 0}
+    ReportRecord:
+      type: object
+      additionalProperties: false
+      required: [category, service, source, observedAt, measure, value, unit, quality, coverage]
+      properties:
+        category: {type: string}
+        service: {type: string}
+        source: {type: string}
+        observedAt: {type: string}
+        measure: {type: string}
+        value: {type: string}
+        unit: {type: string}
+        quality: {type: string}
+        coverage: {type: string}

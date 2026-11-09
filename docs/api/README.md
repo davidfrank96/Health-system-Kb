@@ -1,6 +1,6 @@
 # Lean internal API rules
 
-[OpenAPI](openapi.yaml) 0.5.0 labels 19 locally implemented operations covering staff identity, services, endpoints, availability, infrastructure readings/imports, integrations and health probes. Other operations retain their roadmap status.
+[OpenAPI](openapi.yaml) 0.6.0 covers local staff identity, inventory, monitoring, infrastructure, QA, incidents, maintenance, reports and health probes. Other operations retain their roadmap status.
 
 Local GET /auth/login starts OIDC. The callback verifies identity. Logout requires same-origin form CSRF. GET /api/v1/me returns the session-bound CSRF token. Staff mutations require the appropriate role and environment, CSRF, Origin and an idempotency key. Versioned updates also check If-Match. Metrics API details appear in the Phase 03 section below.
 
@@ -38,3 +38,7 @@ Version0.4.0 marks five more implemented operations: GET/POST endpoints, PATCH e
 ## Phase 03 implementation
 
 The local OpenAPI now covers metrics/latest, history, series, snapshots, imports and integrations list/disable. Series discovery keeps 90-day charts reachable after raw retention. Daily history preserves sample counts and source identity. Preview includes normalized rows and row errors. The staff mutation roles never gain collector authority.
+
+## Phase 04 operational endpoints
+
+GET qa/runs and security/findings accept environment, serviceId, suite, status, start, end and signed, scoped pagination; totals count the entire matching QA set. POST qa/imports is manual; POST webhooks/qa/runs uses a separate sender identity. GET/POST incidents, GET/POST incidents/{id}/updates, GET/POST maintenance and PATCH maintenance/{id} are implemented; cancellation uses {"cancelled":true}. GET reports/summary and reports/export accept kind/start/end/environment. GET reports/attention serves the overview without bulk report data. Paths here are relative to /api/v1/. The timeline GET and compact overview GET extend the proposed contract for chronological staff reads and bounded dashboard counts. Replies use fixed problem codes, no exception or secret. Query bounds: 100 services/endpoints/resources, 500 downtime events/incidents/windows each, 2,000 metric groups, 1,000 QA groups, 5,000 detail rows and 1 MiB CSV. Overflow fails explicitly. No public links or queued exports.

@@ -106,7 +106,7 @@ export async function listEndpoints(
 		throw new HttpError(400, "invalid_cursor");
 	const rows = (
 		await c.query<Endpoint>(
-			`SELECT ${columns},EXISTS(SELECT 1 FROM maintenance_windows m WHERE m.service_id=endpoints.service_id AND m.environment=endpoints.environment AND now()>=m.starts_at AND now()<m.ends_at) AS maintenance FROM endpoints WHERE environment=$1 AND ($2::uuid IS NULL OR id>$2) AND ($3::uuid IS NULL OR service_id=$3) ORDER BY id LIMIT $4`,
+			`SELECT ${columns},EXISTS(SELECT 1 FROM maintenance_windows m WHERE m.cancelled_at IS NULL AND m.service_id=endpoints.service_id AND m.environment=endpoints.environment AND now()>=m.starts_at AND now()<m.ends_at) AS maintenance FROM endpoints WHERE environment=$1 AND ($2::uuid IS NULL OR id>$2) AND ($3::uuid IS NULL OR service_id=$3) ORDER BY id LIMIT $4`,
 			[env, id, service, limit + 1],
 		)
 	).rows;
@@ -249,7 +249,7 @@ export async function statusOverview(
 	// Only twenty monitors may be enabled; include disabled configs for paged services separately.
 	const active = (
 		await c.query<Endpoint>(
-			`SELECT ${columns},EXISTS(SELECT 1 FROM maintenance_windows m WHERE m.service_id=endpoints.service_id AND m.environment=endpoints.environment AND now()>=m.starts_at AND now()<m.ends_at) AS maintenance FROM endpoints WHERE environment=$1 AND enabled ORDER BY id LIMIT 21`,
+			`SELECT ${columns},EXISTS(SELECT 1 FROM maintenance_windows m WHERE m.cancelled_at IS NULL AND m.service_id=endpoints.service_id AND m.environment=endpoints.environment AND now()>=m.starts_at AND now()<m.ends_at) AS maintenance FROM endpoints WHERE environment=$1 AND enabled ORDER BY id LIMIT 21`,
 			[env],
 		)
 	).rows.map(present);
