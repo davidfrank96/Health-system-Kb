@@ -1,3 +1,4 @@
+import { audited } from "./audit";
 import { checkedMetricPage } from "./metric-output";
 import type { PoolClient, QueryResult } from "pg";
 import type { NextRequest } from "next/server";
@@ -26,36 +27,6 @@ import {
 const snapshotFields = `id,resource_id AS "resourceId",service_id AS "serviceId",environment,provider,metric_name AS "metricName",unit,aggregation,value,observed_at AS "observedAt",collected_at AS "collectedAt",ingested_at AS "ingestedAt",source_method AS "sourceMethod",source_reference AS "sourceReference",entered_by AS "enteredBy",note,
  CASE WHEN observed_at < now()-CASE WHEN source_method='provider_api' THEN interval '45 minutes' ELSE interval '24 hours' END THEN 'stale' ELSE 'fresh' END AS quality`;
 const resourceFields = `i.id,i.service_id AS "serviceId",s.name AS "serviceName",i.name,CASE WHEN i.enabled THEN 'api' ELSE 'disabled' END AS mode, CASE WHEN NOT i.enabled THEN 'Collection disabled' END AS "disabledReason",NULL::int AS "remainingUsageUnits",i.environment,i.provider,i.resource_type AS "resourceType",i.region,i.identifier,i.enabled,i.version,i.permission_reviewed AS "permissionReviewed",i.cost_status AS "costStatus",i.expires_at AS "approvalExpiresAt",i.last_success AS "lastSuccessAt",i.collection_state AS "collectionState",ARRAY(SELECT metric_name FROM resource_capabilities WHERE resource_id=i.id ORDER BY metric_name) AS capabilities`;
-async function audited(
-	c: PoolClient,
-	actor: string,
-	env: Environment,
-	action: string,
-	key: string,
-	identity: unknown,
-	work: () => Promise<unknown>,
-) {
-	const digest = contentDigest(identity);
-	await c.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [
-		[actor, action, key].join("/"),
-	]);
-	const previous = (
-		await c.query(
-			"SELECT digest,result FROM audit_events WHERE actor=$1 AND action=$2 AND request_key=$3",
-			[actor, action, key],
-		)
-	).rows[0];
-	if (previous) {
-		if (previous.digest !== digest) throw new HttpError(409, "key_conflict");
-		return previous.result;
-	}
-	const result = await work();
-	await c.query(
-		"INSERT INTO audit_events(actor,environment,action,request_key,digest,result) VALUES($1,$2,$3,$4,$5,$6)",
-		[actor, env, action, key, digest, JSON.stringify(result)],
-	);
-	return result;
-}
 async function validateServices(
 	c: PoolClient,
 	env: Environment,

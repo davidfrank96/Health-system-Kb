@@ -9,6 +9,7 @@ if (process.argv[2] === "--maintenance") {
 		await client.connect();
 		await checkVersion(client);
 		await client.query("SELECT retain_metrics()");
+		await client.query("SELECT retain_operations()");
 		console.log("Local metric retention batch completed.");
 	} finally {
 		await client.end();

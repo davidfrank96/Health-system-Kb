@@ -1,3 +1,5 @@
+import { operationsRoute } from "../../../../lib/operations";
+import { webhook } from "../../../../lib/qa";
 import { infrastructureRoute } from "../../../../lib/infrastructure";
 import {
 	endpointInput,
@@ -37,6 +39,8 @@ async function handle(req: NextRequest, { params }: Args) {
 	try {
 		const { resource } = await params;
 		const [resourceName, id] = resource;
+		if (req.method === "POST" && resource.join("/") === "webhooks/qa/runs")
+			return await webhook(req, headers);
 		const token = req.cookies.get(sessionName)?.value ?? "";
 		if (!token) throw new HttpError(401, "session_required");
 		// A slow read must not hold the last_seen update lock for this session.
@@ -50,6 +54,12 @@ async function handle(req: NextRequest, { params }: Args) {
 			const staff = reader ?? (await staffFor(c, token));
 			if (!staff) throw new HttpError(401, "session_required");
 			actor = staff.id;
+			if (
+				["qa", "security", "incidents", "maintenance", "reports"].includes(
+					resourceName,
+				)
+			)
+				return operationsRoute(req, c, staff, token, resource, headers);
 			if (resourceName === "metrics" || resourceName === "integrations")
 				return infrastructureRoute(req, c, staff, token, resource, headers);
 			if (
@@ -180,6 +190,9 @@ async function handle(req: NextRequest, { params }: Args) {
 		} else if (e instanceof z.ZodError || e instanceof SyntaxError) {
 			status = 400;
 			code = "invalid_input";
+		} else if ((e as { code?: string })?.code === "23P01") {
+			status = 409;
+			code = "window_conflict";
 		} else if ((e as { code?: string })?.code === "23505") {
 			status = 409;
 			code = "name_conflict";

@@ -17,3 +17,7 @@ CSV exports quote fields and prefix dangerous spreadsheet formula-leading string
 ## Phase 03 implementation
 
 The form accepts camelCase JSON and CSV accepts the exact snake_case header above. Preview includes normalized readings and up to 50 row errors. Plain references and query-free HTTPS paths on the documented provider documentation hosts are eligible. Observation identity groups manual and CSV assertions together for conflict detection. Correct either through the manual form. Provider readings remain resource-scoped and read-only. See [operator workflow](../operations/infrastructure-health.md).
+
+## Manual QA
+
+The QA fallback accepts one terminal run, via a staff form or normalized JSON plus a required source reference. Unlike the metric CSV path it commits synchronously and has no preview token. It cannot set a webhook source or sender actor. See the [QA contract](qa.md) and [operator workflow](../operations/qa-incidents-reports.md).

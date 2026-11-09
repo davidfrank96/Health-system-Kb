@@ -6,7 +6,13 @@ test("migrations are current and web cannot administer identities or bypass inve
 		expect(
 			(await c.query("SELECT version FROM schema_migrations ORDER BY version"))
 				.rows,
-		).toEqual([{ version: 1 }, { version: 2 }, { version: 3 }, { version: 4 }]);
+		).toEqual([
+			{ version: 1 },
+			{ version: 2 },
+			{ version: 3 },
+			{ version: 4 },
+			{ version: 5 },
+		]);
 		for (const name of [
 			"users",
 			"memberships",

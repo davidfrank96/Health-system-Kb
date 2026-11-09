@@ -9,6 +9,7 @@ export default defineConfig({
 				"**/dashboard.spec.ts",
 				"**/monitoring.spec.ts",
 				"**/infrastructure.spec.ts",
+				"**/operations.spec.ts",
 			]
 		: [
 				"**/browser-isolation.spec.ts",

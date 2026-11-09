@@ -41,3 +41,7 @@ Shared monitoring modules provide the executor, deterministic state/history calc
 ## Phase 03 implementation
 
 The staff dashboard and finite collector share PostgreSQL. Migration 004 adds infrastructure observations, resource mappings and bounded retention. See the [infrastructure guide](../operations/infrastructure-health.md).
+
+## Phase 04 operational evidence
+
+The existing Next.js process accepts controlled signed QA deliveries or staff manual imports. Operators own incident and maintenance records; viewers can generate scoped reports synchronously. Shared SQL reads compose the existing availability and metric stores. No new service, dependency, scheduler or infrastructure budget was introduced. [Operations guide](../operations/qa-incidents-reports.md).

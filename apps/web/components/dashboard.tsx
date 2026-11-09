@@ -1,3 +1,6 @@
+import { QA } from "./operations/qa";
+import { Incidents, Maintenance } from "./operations/incidents";
+import { Reports, Attention } from "./operations/reports";
 import { Infrastructure } from "./infrastructure";
 import { Monitoring, MonitorSettings } from "./monitoring";
 import Link from "next/link";
@@ -5,23 +8,6 @@ import type { Staff } from "../lib/security";
 import { Brand } from "./brand";
 import { sections } from "./sections";
 import { Inventory } from "./inventory";
-const empty = {
-	"qa-security": [
-		"QA results",
-		"No QA results yet",
-		"Test runs and security findings will appear here once an approved source supplies evidence.",
-	],
-	"incidents-maintenance": [
-		"Incident timeline",
-		"No incident history yet",
-		"Incident and maintenance tracking is scheduled for a later phase.",
-	],
-	"reports-history": [
-		"Report archive",
-		"No reports yet",
-		"Historical reports require recorded observations.",
-	],
-} as const;
 export function DashboardView({
 	active,
 	staff,
@@ -46,7 +32,7 @@ export function DashboardView({
 			</main>
 		);
 	const env = membership.environment;
-	const message = empty[section as keyof typeof empty];
+	const ops = { env, csrf, write: membership.role !== "viewer" };
 	return (
 		<div className="workspace">
 			<a className="skip" href="#main">
@@ -133,15 +119,16 @@ export function DashboardView({
 						write={membership.role !== "viewer"}
 					/>
 				)}
-				{message ? (
-					<section className="panel">
-						<h2>{message[0]}</h2>
-						<div className="blank">
-							<strong>{message[1]}</strong>
-							<p>{message[2]}</p>
-						</div>
-					</section>
-				) : section === "settings-integrations" ? (
+				{section === "overview" && <Attention key={env} env={env} />}
+				{section === "qa-security" && <QA key={env} {...ops} />}
+				{section === "incidents-maintenance" && (
+					<Incidents key={env} {...ops} />
+				)}
+				{section === "reports-history" && <Reports key={env} env={env} />}
+				{section === "application-status" && (
+					<Maintenance key={env} {...ops} compact services={[]} />
+				)}
+				{section === "settings-integrations" ? (
 					<Inventory
 						key={section + env}
 						section={active.slug}

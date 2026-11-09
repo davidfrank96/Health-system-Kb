@@ -60,12 +60,13 @@ if [[ "$tier" == test ]]; then
   fixture node tests/support/upgrade.mjs seed
   fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs --test-v3
   fixture node tests/support/upgrade.mjs seed-v3
+  fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs --test-v4
+  fixture node tests/support/metric-restore.mjs
 fi
 fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs
 if [[ "$tier" == test ]]; then
   fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs
   fixture node tests/support/upgrade.mjs verify
-  fixture node tests/support/metric-restore.mjs
   fixture node jobs/check.mjs --maintenance
   if [[ "$owned_server" == true ]]; then
     admin_env=("PGHOST=$dbhost" "PGPORT=$dbport" PGUSER=fixture_owner "PGPASSWORD=$bootstrap")
@@ -76,7 +77,9 @@ if [[ "$tier" == test ]]; then
     [[ "$restored" == 1 ]] || exit 1
     restored_metric=$(clean env "${admin_env[@]}" psql -XAt -d kbean_test_restore -v ON_ERROR_STOP=1 -c "SELECT value FROM metric_snapshots WHERE source_reference='restore-proof' AND environment='staging' AND source_method='manual'")
     [[ "$restored_metric" == 29 ]] || exit 1
-    echo "Native dump restored into independent test database; identity recovered."
+    restored_timeline=$(clean env "${admin_env[@]}" psql -XAt -d kbean_test_restore -v ON_ERROR_STOP=1 -c "SELECT count(*) FROM incident_updates t JOIN incidents i ON i.id=t.incident_id JOIN users u ON u.id=t.actor WHERE i.environment='staging' AND u.subject='upgrade-proof' AND t.message='Synthetic restore marker'")
+    [[ "$restored_timeline" == 1 ]] || exit 1
+    echo "Native dump restored into independent test database; identity, metric and incident timeline recovered."
   fi
 fi
 case "$mode" in
