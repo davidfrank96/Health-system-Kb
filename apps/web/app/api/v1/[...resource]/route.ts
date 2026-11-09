@@ -1,3 +1,4 @@
+import { infrastructureRoute } from "../../../../lib/infrastructure";
 import {
 	endpointInput,
 	saveEndpoint,
@@ -38,10 +39,19 @@ async function handle(req: NextRequest, { params }: Args) {
 		const [resourceName, id] = resource;
 		const token = req.cookies.get(sessionName)?.value ?? "";
 		if (!token) throw new HttpError(401, "session_required");
+		// A slow read must not hold the last_seen update lock for this session.
+		// Mutations keep authorization and the write in the same transaction.
+		const reader =
+			req.method === "GET"
+				? await transaction((c) => staffFor(c, token))
+				: undefined;
+		if (reader === null) throw new HttpError(401, "session_required");
 		return await transaction(async (c) => {
-			const staff = await staffFor(c, token);
+			const staff = reader ?? (await staffFor(c, token));
 			if (!staff) throw new HttpError(401, "session_required");
 			actor = staff.id;
+			if (resourceName === "metrics" || resourceName === "integrations")
+				return infrastructureRoute(req, c, staff, token, resource, headers);
 			if (
 				resource.length === 1 &&
 				resourceName === "me" &&

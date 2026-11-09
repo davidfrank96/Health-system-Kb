@@ -1,8 +1,8 @@
 # Lean internal API rules
 
-[OpenAPI](openapi.yaml) 0.3.0-foundation labels each locally implemented operation. The seven implemented operations cover staff identity, service list/create/read/update and process liveness/readiness. Other operations are phase plans. The .invalid server remains a documentation placeholder.
+[OpenAPI](openapi.yaml) 0.5.0 labels 19 locally implemented operations covering staff identity, services, endpoints, availability, infrastructure readings/imports, integrations and health probes. Other operations retain their roadmap status.
 
-Local paths: GET /auth/login starts OIDC, GET /auth/callback verifies the identity and POST /auth/logout requires same-origin form CSRF. GET /api/v1/me returns a session-bound X-CSRF-Token header. Service create and update require that header, Origin and Idempotency-Key. PATCH uses a complete validated ServiceInput and quoted If-Match. The stable UUID cursor is signed for the environment and actor. Current service health is unknown with missing freshness, and verification is unverified. Endpoint registration and collection are deferred. The remaining design below includes future controls, statuses and proposed rate limits.
+Local GET /auth/login starts OIDC. The callback verifies identity. Logout requires same-origin form CSRF. GET /api/v1/me returns the session-bound CSRF token. Staff mutations require the appropriate role and environment, CSRF, Origin and an idempotency key. Versioned updates also check If-Match. Metrics API details appear in the Phase 03 section below.
 
 ## Authentication and scope
 
@@ -34,3 +34,7 @@ See the native database guide for owner approval and migrations, and the accepta
 ## Phase 02 implemented contract
 
 Version0.4.0 marks five more implemented operations: GET/POST endpoints, PATCH endpoints/{id}, GET status/overview and GET status/history. These extend the existing catch-all route; there is no probing API. Configuration uses expectedCodes, failureThreshold/recoveryThreshold and slowMs/clearMs; owner approval fields are response-only. Endpoint creation starts disabled. Canonical URL change removes approval. ServiceId is optional on the endpoint list, mandatory on history. All list/history pages cap limit100; signed cursors bind actor/scope/query. History requires UTC start/end within90days; fractions are0–1 and displayed as percentages. Outage results are capped100 with an explicit truncation flag. OpenAPI describes the exact local response shapes; unimplemented later-phase operations remain labeled accordingly.
+
+## Phase 03 implementation
+
+The local OpenAPI now covers metrics/latest, history, series, snapshots, imports and integrations list/disable. Series discovery keeps 90-day charts reachable after raw retention. Daily history preserves sample counts and source identity. Preview includes normalized rows and row errors. The staff mutation roles never gain collector authority.

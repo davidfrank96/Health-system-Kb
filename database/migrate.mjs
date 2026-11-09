@@ -9,7 +9,8 @@ import {
 if (process.env.KBEAN_MIGRATION_APPROVED !== "yes")
 	throw new Error("Set explicit approval for this development/test migration.");
 const v1Only = process.argv[2] === "--test-v1";
-if (v1Only) requireApprovedTest(process.env);
+const v3Only = process.argv[2] === "--test-v3";
+if (v1Only || v3Only) requireApprovedTest(process.env);
 const client = new pg.Client(connectionOptions(process.env, "migrator"));
 try {
 	await client.connect();
@@ -24,13 +25,14 @@ try {
 		"001_identity.sql",
 		"002_inventory.sql",
 		"003_monitoring.sql",
+		"004_infrastructure.sql",
 	].entries()) {
 		const sql = await readFile(
 				new URL(`./migrations/${file}`, import.meta.url),
 				"utf8",
 			),
 			version = index + 1;
-		if (v1Only && version > 1) break;
+		if ((v1Only && version > 1) || (v3Only && version > 3)) break;
 		const digest = createHash("sha256").update(sql).digest("hex");
 		const previous = await client.query(
 			"SELECT digest FROM schema_migrations WHERE version=$1",

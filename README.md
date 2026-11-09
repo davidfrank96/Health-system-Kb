@@ -2,7 +2,7 @@
 
 An internal dashboard for approved Kbean staff: sampled application availability, supported infrastructure readings, QA results, incidents and historical reports.
 
-**Phase 02 availability monitoring is implemented locally; acceptance review is pending.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
+**Phase 02 merged in PR #2. Phase 03 infrastructure monitoring is implemented for local review.** One Next.js web service, one small single-node PostgreSQL database and one finite scheduled collection job every 15 minutes. Target approximately €50/month including small operational charges; the actual hard spending limit and account costs must be approved before deployment. No additional paid API services or runtime AI.
 
 Start with the [revised Phase 00 report](docs/architecture/phase-00-report.md), [change summary](docs/architecture/change-summary.md), [cost estimate](docs/deployment/cost-estimate.md) and [approval register](harness/context/decisions-and-open-questions.md).
 
@@ -35,3 +35,7 @@ Open the loopback URL printed by the launcher, continue to sign in and choose a 
 ## Phase 02 availability
 
 Overview and Application Status read actual stored monitoring observations; Settings manages disabled targets and approved configuration. The [monitoring guide](docs/operations/availability-monitoring.md) covers the controlled job, exact target approval, health/history semantics, limits, native testing and troubleshooting. Run `corepack pnpm job:fixtures` for a disposable HTTP-to-PostgreSQL scenario. Live checks and cloud integrations remain disabled. See the [Phase 02 report](docs/reports/phase-02-report.md) before approval or publication.
+
+## Phase 03 infrastructure health
+
+The [infrastructure guide](docs/operations/infrastructure-health.md) covers resource registration, disposable provider fixtures, manual entry, CSV preview, history and retention. Review the [acceptance report](docs/reports/phase-03-report.md) for test evidence and pending live approvals.

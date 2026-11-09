@@ -76,3 +76,7 @@ Daily summaries are per endpoint/day with96 compact S/F/U/M/N values and a water
 Web may read monitoring evidence and mutate only approved configuration columns; it cannot write approvals, state, checks, summaries or run rows. Collector may read targets, write observations/state/events/runs/summaries and run bounded retention; it cannot change targets, approval or staff access. Migrator remains offline. The monitor_samples SQL function is security-invoker and not public. All connections use the existing local-tier guards.
 
 See [retention, migration recovery and commands](../operations/availability-monitoring.md). SQL rollback and native restore are tested on disposable data. No destructive down migration is supplied because it would erase evidence. Earlier migration checksums remain unchanged.
+
+## Phase 03 implementation
+
+Migration 004 implements integrations, metric_snapshots and import_batches. Four small supporting tables enforce canonical units, per-resource capabilities, transaction-safe read budgets and daily metric retention. Checked insertion views split web and collector provenance. The previous proposed table count is historical. See [ADR 0009](../decisions/0009-infrastructure-metrics.md) and [retention commands](../operations/infrastructure-health.md).

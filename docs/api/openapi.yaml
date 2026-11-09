@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: Kbean internal health API
-  version: 0.4.0-monitoring
-  description: Phase01 foundation and Phase02 local availability monitoring are implemented. Other operations
+  version: 0.5.0-infrastructure
+  description: Phase 01 staff access, Phase 02 availability and Phase 03 local infrastructure metrics are implemented. Other operations
     remain planned. Staff-only operations; live collection disabled. Fractions in monitoring availability
     range from 0 to 1.
 servers:
@@ -1094,22 +1094,25 @@ paths:
     get:
       operationId: getMetricsLatest
       summary: getMetricsLatest
-      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation
+      description: Raw snapshots <=30d. Preserve manual/API provenance and observation
         age; longer trends use daily reports.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
       - admin
       parameters:
       - $ref: '#/components/parameters/Environment'
-      - $ref: '#/components/parameters/ServiceId'
-      - $ref: '#/components/parameters/Metric'
+      - {name: serviceId, in: query, schema: {type: string, format: uuid}}
+      - {name: metricName, in: query, schema: {type: string}}
+      - name: provider
+        in: query
+        schema: {type: string, enum: [digitalocean, azure, gcp, firebase, other]}
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -1181,9 +1184,9 @@ paths:
     get:
       operationId: getMetricsHistory
       summary: getMetricsHistory
-      description: UNIMPLEMENTED. Raw snapshots <=30d. Preserve manual/API provenance and observation
+      description: Raw snapshots <=30d. Preserve manual/API provenance and observation
         age; longer trends use daily reports.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
@@ -1192,17 +1195,110 @@ paths:
       - $ref: '#/components/parameters/Environment'
       - $ref: '#/components/parameters/ServiceId'
       - $ref: '#/components/parameters/Metric'
+      - name: provider
+        in: query
+        schema: {type: string, enum: [digitalocean, azure, gcp, firebase, other]}
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
+      - {name: resolution, in: query, schema: {type: string, enum: [raw, daily], default: raw}}
       - $ref: '#/components/parameters/Start'
       - $ref: '#/components/parameters/End'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MetricSnapshotPage'
+                anyOf:
+                - $ref: '#/components/schemas/MetricSnapshotPage'
+                - $ref: '#/components/schemas/DailyMetricPage'
+          headers:
+            X-Request-Id:
+              description: Safe correlation ID
+              schema: *id001
+            Cache-Control:
+              description: private, no-store for operational data
+              schema:
+                type: string
+                maxLength: 100
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthenticated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not found in scope
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Version, identity or preview conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '413':
+          description: Body too large
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Rate limited
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+          headers:
+            Retry-After:
+              description: Seconds before retry
+              schema:
+                type: integer
+                minimum: 1
+        '503':
+          description: Local critical dependency unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/metrics/series:
+    get:
+      operationId: listArchivedMetricSeries
+      summary: listArchivedMetricSeries
+      description: List distinct archived series with retained UTC days in the last 90 days.
+      x-implementation-status: implemented-local
+      x-required-roles:
+      - viewer
+      - operator
+      - admin
+      parameters:
+      - $ref: '#/components/parameters/Environment'
+      - name: provider
+        in: query
+        schema: {type: string, enum: [digitalocean, azure, gcp, firebase, other]}
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Successful local response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchivedMetricPage'
           headers:
             X-Request-Id:
               description: Safe correlation ID
@@ -1270,9 +1366,9 @@ paths:
     post:
       operationId: enterManualSnapshot
       summary: enterManualSnapshot
-      description: UNIMPLEMENTED. Always sourceMethod manual, server actor/time; observedAt within past
+      description: Always sourceMethod manual, server actor/time; observedAt within past
         30d, no future >2m. Cannot alter health checks.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -1281,7 +1377,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '201':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -1359,9 +1455,9 @@ paths:
     post:
       operationId: importMetricCSV
       summary: importMetricCSV
-      description: UNIMPLEMENTED. UTF-8 CSV <=256 KiB/500 rows. Preview dryRun=true has no writes; dryRun=false
+      description: UTF-8 CSV <=256 KiB/500 rows. Preview dryRun=true has no writes; dryRun=false
         requires same normalized X-Preview-Digest. Entire batch atomic. See manual-imports.md.
-      x-implementation-status: unimplemented
+      x-implementation-status: implemented-local
       x-required-roles:
       - operator
       - admin
@@ -1384,7 +1480,7 @@ paths:
         description: Required when dryRun=false; compare normalized content and authorization again.
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -1463,19 +1559,22 @@ paths:
     get:
       operationId: listIntegrations
       summary: listIntegrations
-      description: 'UNIMPLEMENTED. '
-      x-implementation-status: unimplemented
+      description: Environment-scoped configured resources and approved metric names.
+      x-implementation-status: implemented-local
       x-required-roles:
       - viewer
       - operator
       - admin
       parameters:
       - $ref: '#/components/parameters/Environment'
+      - name: provider
+        in: query
+        schema: {type: string, enum: [digitalocean, azure, gcp, firebase, other]}
       - $ref: '#/components/parameters/Limit'
       - $ref: '#/components/parameters/Cursor'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -1552,10 +1651,8 @@ paths:
     patch:
       operationId: updateIntegration
       summary: updateIntegration
-      description: UNIMPLEMENTED. No secret values. Enable only if stored current permission AND verified_no_incremental_cost
-        evidence and bounded allowance exist. Client cannot self-assert costStatus. No live validation
-        request.
-      x-implementation-status: unimplemented
+      description: No secret values. Local configuration supports disabling a resource. Enabling returns 409 and requires a separate live-read release.
+      x-implementation-status: implemented-local
       x-required-roles:
       - admin
       parameters:
@@ -1565,7 +1662,7 @@ paths:
       - $ref: '#/components/parameters/Key'
       responses:
         '200':
-          description: Proposed successful response
+          description: Successful local response
           content:
             application/json:
               schema:
@@ -3844,6 +3941,8 @@ components:
       type: object
       additionalProperties: false
       properties:
+        resourceId: {type: string, format: uuid, nullable: true}
+        note: {type: string, maxLength: 1000}
         id: *id001
         serviceId: *id001
         environment: *id003
@@ -3895,6 +3994,10 @@ components:
       type: object
       additionalProperties: false
       properties:
+        readings:
+          type: array
+          maxItems: 500
+          items: {$ref: '#/components/schemas/MetricInput'}
         dryRun:
           type: boolean
         digest: *id021
@@ -3941,6 +4044,15 @@ components:
       type: object
       additionalProperties: false
       properties:
+        serviceId: {type: string, format: uuid}
+        serviceName: {type: string}
+        name: {type: string}
+        resourceType: {type: string}
+        region: {type: string, nullable: true}
+        identifier: {type: string}
+        collectionState: {type: string}
+        permissionReviewed: {type: boolean}
+        capabilities: {type: array, items: {type: string}}
         id: *id001
         provider:
           type: string
@@ -3992,12 +4104,6 @@ components:
       properties:
         enabled:
           type: boolean
-        approvalReference:
-          type: string
-          maxLength: 500
-        permissionEvidenceReference:
-          type: string
-          maxLength: 500
       required:
       - enabled
     IncidentInput:
@@ -4503,6 +4609,49 @@ components:
       required:
       - items
       - nextCursor
+    ArchivedMetricPage:
+      type: object
+      required: [items, nextCursor]
+      additionalProperties: false
+      properties:
+        nextCursor: {type: string, nullable: true}
+        items:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            required: [serviceId, resourceId, provider, unit, sourceMethod, metricName, quality]
+            additionalProperties: false
+            properties:
+              serviceId: {type: string, format: uuid}
+              resourceId: {type: string, format: uuid, nullable: true}
+              provider: {type: string}
+              unit: {type: string}
+              sourceMethod: {type: string}
+              metricName: {type: string}
+              quality: {type: string, enum: [archived]}
+    DailyMetricPage:
+      type: object
+      required: [items, nextCursor]
+      additionalProperties: false
+      properties:
+        nextCursor: {type: string, nullable: true}
+        items:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            required: [provider, resourceId, sourceMethod, observedAt, samples, minimum, maximum, mean]
+            additionalProperties: false
+            properties:
+              provider: {type: string}
+              resourceId: {type: string, format: uuid, nullable: true}
+              sourceMethod: {type: string}
+              observedAt: {type: string, format: date-time}
+              samples: {type: integer}
+              minimum: {type: number}
+              maximum: {type: number}
+              mean: {type: number}
     MetricSnapshotPage:
       type: object
       additionalProperties: false

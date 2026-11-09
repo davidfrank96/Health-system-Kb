@@ -1,3 +1,4 @@
+import { Infrastructure } from "./infrastructure";
 import { Monitoring, MonitorSettings } from "./monitoring";
 import Link from "next/link";
 import type { Staff } from "../lib/security";
@@ -5,11 +6,6 @@ import { Brand } from "./brand";
 import { sections } from "./sections";
 import { Inventory } from "./inventory";
 const empty = {
-	"infrastructure-health": [
-		"Infrastructure readings",
-		"No infrastructure readings yet",
-		"Provider integrations are disabled. No resource metrics have been collected.",
-	],
 	"qa-security": [
 		"QA results",
 		"No QA results yet",
@@ -127,6 +123,14 @@ export function DashboardView({
 						key={section + env}
 						env={env}
 						overview={section === "overview"}
+					/>
+				)}
+				{section === "infrastructure-health" && (
+					<Infrastructure
+						key={env}
+						env={env}
+						csrf={csrf}
+						write={membership.role !== "viewer"}
 					/>
 				)}
 				{message ? (

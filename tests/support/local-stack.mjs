@@ -1,3 +1,4 @@
+import { infrastructureFixture } from "./infra-fixture.mjs";
 import pg from "pg";
 import { connectionOptions, checkVersion } from "../../database/connection.mjs";
 import { spawn } from "node:child_process";
@@ -18,7 +19,10 @@ if (interactive) {
 	await owner.connect();
 	await checkVersion(owner);
 }
-if (!interactive) await monitoringFixture(owner);
+if (!interactive) {
+	await monitoringFixture(owner);
+	await infrastructureFixture(owner);
+}
 const reservation = createServer();
 reservation.listen(interactive ? 3000 : 0, "127.0.0.1");
 await once(reservation, "listening");

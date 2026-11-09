@@ -157,3 +157,40 @@ Gitleaks history clean. All tracked/new nonignored source files reviewed: only t
 ## Phase 02 publication authorization
 
 The owner approved the proposed commit, feature-branch push and review PR. Rechecked the branch, diff and secret boundary before publication. Implementation and test evidence are unchanged from the local acceptance report; only authorization records were updated. Merge, live monitoring, cloud changes, deployment and Phase 03 remain outside this approval.
+
+## Phase 03 checkpoint A · 9 November 2026
+Fetched main and verified PR #2 merge be8d2eb contains b084305. Created a clean feature branch. Updated AGENTS, PLANS and the execution plan. Added infrastructure/metrics.ts, imports.ts and digitalocean.mjs with controlled metric descriptors, offline authority, bounded matrix parsing and counter reset handling. Reviewed the official DigitalOcean Monitoring REST, pricing and scopes pages. Account-level cost and resources remain unverified. Ran vitest run tests/unit/infrastructure.test.ts: 7 passed. Next verify database grants, replay, corrections and end-to-end ingestion. No live credential or request.
+
+## Phase 03 checkpoint B
+Migration 004 adds scoped resource capabilities, import identities, separate checked ingestion views, immutable observations, explicit corrections, bounded daily accumulation and request reservations. Existing migrations are unchanged. The finite fixture entrypoint exercises the adapter with a controlled matrix and collector identity. Initial native integration run passed eight existing checks. After adding the descriptor, grant, correction rollback and exact-once retention test, all nine passed. Native launcher upgraded through v3, reran v4 and restored a dump into a separate database. Next validate the operator UI and API against those tables.
+
+## Phase 03 checkpoint C
+Connected the private metrics/imports/integrations routes and Infrastructure Health to PostgreSQL. Added provider selection, source and freshness labels, raw/daily UTC charts and manual and CSV forms. Typecheck and optimized build passed after adding explicit pagination response types. Initial authenticated browser run exposed a selector mismatch for the manual form on both viewports. Switched to the accessible combobox role and exact name. Added changed-preview/replay and CSRF tests. Recheck both viewports after rebuilding.
+
+## Phase 03 checkpoint D · local review gate
+
+The final build on the Phase 03 branch passed 161 unique automated checks. Repeats during debugging are excluded.
+
+| Command | Observed result |
+| --- | --- |
+| `corepack pnpm test:unit` (Vitest) | 85 passed, including provider fixtures, import validation, contracts and previous regressions |
+| `PATH="$PWD/node_modules/.bin:$PATH" bash database/native.sh verify` | 10 PostgreSQL tests and 48 authenticated Playwright tests passed. Disposable migration, v3 sentinel preservation, replay, separate native dump/restore of identity and manual metric, and collector maintenance succeeded. |
+| `playwright test --output=/tmp/kbean03-final-public` | 18 public, isolated browser and component-fixture checks passed |
+| `bash database/native.sh monitoring` with project binaries on PATH | Finite fixture entrypoint completed, including controlled adapter to collector-role persistence |
+| `tsc --noEmit`, `biome lint .`, `next build apps/web --webpack`, `bash -n database/native.sh` | Passed. Optimized production-mode app served locally in the authenticated browser suite. |
+| `corepack pnpm audit --audit-level=high` and frozen offline lockfile check | No known vulnerabilities, pinned lockfile accepted |
+| `git diff --check`, changed-file review, redacted Gitleaks history and full nonignored snapshot | History clean. Two snapshot matches were existing archive manifest checksums at lines 23 and 52. Verified archive and migrations 001–003 against main. No new exposure found. |
+
+Added archived-only UI discovery and validated a 40-day-old retained metric using staging data and an empty production view. Tested that two collector connections contending for the same resource budget spend one reservation. The read API validates response projections and exposes safe metadata. Admin disable uses a restricted database function. The maintenance command performs one bounded batch. Revised docs include the metric dictionary, effective permissions, source/age semantics, migration and rollback, and account approval requirements.
+
+Browser issues resolved during verification included label lookup, datetime-local normalization, a newer sample obscuring an older fixture on the latest view, and a locator matching both SVG title and textual detail. One overlapping intermediate browser run lost a Playwright trace during context cleanup. The final complete authenticated run passed after separating output directories from independent browser runs.
+
+Changes are grouped under infrastructure/, database/migrations/004_infrastructure.sql, database/register-resource.mjs, database/migrate.mjs, database/native.sh, jobs/check.mjs, apps/web/lib/{infrastructure,metric-output}.ts, the existing API dispatcher and dashboard, the new infrastructure component, styles, Playwright config, tests/{unit,integration,e2e,support}, docs/{api,architecture,database,decisions,integrations,operations,security,testing,reports}, AGENTS, PLANS, README and harness. The [acceptance report](../docs/reports/phase-03-report.md) and [PR draft](code-review/phase-03-pr.md) are ready for review. Actual provider validation, hosting cost, publication and hosted CI remain open.
+
+## Phase 03 hosted CI repair · PR #3
+
+In [Engineering quality run 42606570972](https://github.com/davidfrank96/Health-system-Kb/actions/runs/42606570972), the desktop inventory timeout/recovery check failed before Settings rendered its loading indicator. PostgreSQL logged the blocked services SELECT and concurrent session last_seen UPDATE timeouts. The catch-all API handler held the session row lock through the slow read. A second request using the same cookie could exhaust its own timeout authenticating.
+
+Changed the API handler to commit GET session validation and renewal before starting the data transaction. Reads still validate expiry, staff membership and environment access. Mutations continue to authorize and write in the same transaction. The dashboard regression now deliberately starts a same-session inventory request under an exclusive services lock, verifies PostgreSQL sees a waiter, and requires the identity API to return 200 while the read is blocked. It also checks the inventory 503, visible error and successful retry after release.
+
+Ran the strengthened desktop check against the original commit in an isolated checkout. It failed with “inventory finished first.” With the fix, both desktop and mobile passed twice using native disposable PostgreSQL and the optimized Next.js build (`bash database/native.sh browser --grep 'inventory shows a slow database read' --repeat-each=2`). Typecheck, lint and build passed. The full hosted result is recorded by GitHub Actions on the pushed commit.
