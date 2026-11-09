@@ -58,11 +58,15 @@ if [[ "$tier" == test ]]; then
   local_env+=(KBEAN_TEST_APPROVED=yes)
   fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs --test-v1
   fixture node tests/support/upgrade.mjs seed
+  fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs --test-v3
+  fixture node tests/support/upgrade.mjs seed-v3
 fi
 fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs
 if [[ "$tier" == test ]]; then
   fixture env KBEAN_MIGRATION_APPROVED=yes node database/migrate.mjs
   fixture node tests/support/upgrade.mjs verify
+  fixture node tests/support/metric-restore.mjs
+  fixture node jobs/check.mjs --maintenance
   if [[ "$owned_server" == true ]]; then
     admin_env=("PGHOST=$dbhost" "PGPORT=$dbport" PGUSER=fixture_owner "PGPASSWORD=$bootstrap")
     clean env "${admin_env[@]}" pg_dump -Fc -d kbean_test -f "$scratch/fixture.dump"
@@ -70,6 +74,8 @@ if [[ "$tier" == test ]]; then
     clean env "${admin_env[@]}" pg_restore --exit-on-error -d kbean_test_restore "$scratch/fixture.dump"
     restored=$(clean env "${admin_env[@]}" psql -XAt -d kbean_test_restore -c "SELECT count(*) FROM users WHERE subject='upgrade-proof'")
     [[ "$restored" == 1 ]] || exit 1
+    restored_metric=$(clean env "${admin_env[@]}" psql -XAt -d kbean_test_restore -v ON_ERROR_STOP=1 -c "SELECT value FROM metric_snapshots WHERE source_reference='restore-proof' AND environment='staging' AND source_method='manual'")
+    [[ "$restored_metric" == 29 ]] || exit 1
     echo "Native dump restored into independent test database; identity recovered."
   fi
 fi

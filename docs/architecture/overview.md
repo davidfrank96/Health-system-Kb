@@ -37,3 +37,7 @@ The local Phase 01 foundation is implemented in apps/web. Native PostgreSQL 18 h
 ## Phase 02 implementation
 
 Shared monitoring modules provide the executor, deterministic state/history calculations, transactionally stored runs/checks/outage events and bounded retention. Migration003 adds monitoring domains to the existing database and a restricted collector identity; it introduces no service or persistent worker. Admin target configuration cannot write owner approvals or observations. Live network execution remains disabled; local HTTP/TLS fixtures use an exact test-only capability and an isolated test database. See [implementation and commands](../operations/availability-monitoring.md). Basic offline-approved maintenance intervals support calculations; full incidents and operational maintenance UI remain Phase04.
+
+## Phase 03 implementation
+
+The staff dashboard and finite collector share PostgreSQL. Migration 004 adds infrastructure observations, resource mappings and bounded retention. See the [infrastructure guide](../operations/infrastructure-health.md).

@@ -1,6 +1,6 @@
 # Lean data flows and execution limits
 
-Phase02 implements the local availability path. Provider/manual/QA flows below remain planned. Store UTC observation time, collection/entry time and ingestion time separately, with source and environment attribution.
+Phase02 implements the local availability path. The Phase 03 provider fixture and manual flows are implemented locally. QA ingestion remains planned. Store UTC observation time, collection/entry time and ingestion time separately, with source and environment attribution.
 
 ## Finite scheduled run
 
@@ -34,3 +34,7 @@ Incident/maintenance updates are authorized database transactions. Observed down
 ## Phase 02 runtime boundary
 
 The reusable runner currently accepts only an approved disposable test database and exact controlled fixture authority. The default entrypoint sends no requests, and no environment toggle enables live probing. The collector connection owns the advisory lock for its entire lifetime; run registration commits before outbound work. The final check/state/event/rollup transaction either commits together or rolls back. Endpoint configuration is rechecked under row lock before storing a result. Lost lock connections abort work and leave an honest unfinished run. API handlers use the web identity and have no probe or owner-approval capability. See [commands and implemented limits](../operations/availability-monitoring.md).
+
+## Phase 03 implementation
+
+The provider fixture traverses the collector read adapter, fixed resource gate, atomic budget reservation and provider-only insertion view. The staff path uses session, environment and CSRF checks, validates the entire submission, then inserts batch, readings and audit in one transaction. Both paths feed the infrastructure API. Availability tables are independent.

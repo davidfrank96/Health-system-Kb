@@ -16,3 +16,7 @@ Revision 2. No account-level cost/permission evidence has been supplied; **all l
 Approval record per source: owner, environment/resources, operation names, credential reference, effective read grants, official price evidence/date, billing-account allowance, existing/other-consumer forecast, local conservative cap, expiry/review time and decision. `cost_status = unverified | verified_no_incremental_cost | blocked`; enabled requires verified status and unexpired evidence. Credentials alone never enable an integration.
 
 If usage cannot be bounded or shared headroom ceases to be reliable, pause collection before issuing more requests and show reason/last observation. Do not auto-switch to a paid tier. [Adapter contract](adapter-contract.md), [cost estimate](../deployment/cost-estimate.md), [manual import](manual-imports.md) and [research](../architecture/research.md) specify limits. Provider budget alerts are not guaranteed spend caps.
+
+## Phase 03 implementation
+
+DigitalOcean droplet and App Platform matrix reads have controlled local coverage. Azure, GCP, Firebase and explicitly identified other providers accept manual evidence. No account has supplied current approvals for automatic reads. Hashio and Fusion remain unidentified.

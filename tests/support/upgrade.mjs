@@ -5,14 +5,25 @@ try {
 		await client.query(
 			"INSERT INTO users(issuer,subject,email) VALUES('fixture','upgrade-proof','upgrade@example.invalid')",
 		);
+	} else if (process.argv[2] === "seed-v3") {
+		await client.query(`WITH s AS (INSERT INTO services(environment,name,product,owner,criticality,evidence_reference) VALUES('staging','Schema upgrade sentinel','Fixture','Fixture','normal','fixture') RETURNING id,environment)
+ INSERT INTO endpoints(service_id,environment,url) SELECT id,environment,'https://upgrade.example.invalid/health' FROM s`);
 	} else {
+		if (
+			(
+				await client.query(
+					"SELECT id FROM endpoints WHERE environment='staging' AND url='https://upgrade.example.invalid/health'",
+				)
+			).rowCount !== 1
+		)
+			throw Error("Phase 02 endpoint lost during upgrade");
 		const { rows } = await client.query(
 			"SELECT count(*)::int AS count FROM users WHERE issuer='fixture' AND subject='upgrade-proof'",
 		);
 		if (rows[0].count !== 1)
 			throw new Error("Upgrade failed to preserve identity");
 		console.log(
-			"Populated v1 database upgraded to v3 and replayed successfully.",
+			"Populated v1 database upgraded through v3 to v4 and replayed successfully.",
 		);
 	}
 } finally {

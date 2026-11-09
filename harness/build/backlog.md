@@ -28,3 +28,5 @@ L01-1 through L01-5 are implemented locally. See the Phase 01 report for execute
 | L05-3 / 05 | Explicit DO provisioning/release and handover | All gates, budget and deploy scope | Private access/TLS/permissions, measured job billing/runtime, rollback/owner acceptance |
 
 Unknown-cost optional providers do not block core HTTPS/manual use; keep them visibly disabled. No task includes a permanent remote staging stack, public API, paid integration, queue service or runtime AI. Additions need a new scope/budget decision.
+
+Phase 03 local delivery and verification of L03-1 through L03-4 are recorded in the [acceptance report](../../docs/reports/phase-03-report.md). Account permissions, allowance evidence and bounded live validation remain owner decisions.

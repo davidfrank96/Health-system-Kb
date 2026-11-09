@@ -1,3 +1,4 @@
+import { infrastructureRoute } from "../../../../lib/infrastructure";
 import {
 	endpointInput,
 	saveEndpoint,
@@ -42,6 +43,8 @@ async function handle(req: NextRequest, { params }: Args) {
 			const staff = await staffFor(c, token);
 			if (!staff) throw new HttpError(401, "session_required");
 			actor = staff.id;
+			if (resourceName === "metrics" || resourceName === "integrations")
+				return infrastructureRoute(req, c, staff, token, resource, headers);
 			if (
 				resource.length === 1 &&
 				resourceName === "me" &&

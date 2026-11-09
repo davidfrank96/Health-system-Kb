@@ -653,6 +653,12 @@ button.service-link {
 	align-items: center;
 	gap: 9px;
 }
+.metric-form { display:grid; gap:.8rem; margin-top:1rem; max-width:42rem; }
+.metric-form label {display:grid;gap:.3rem}
+.metric-form input,.metric-form select,.metric-form textarea {max-width:100%;min-width:0}
+.panel article {margin-block:.8rem;padding-block:.5rem;border-top:1px solid #d4dce1;overflow-wrap:anywhere}
+.panel details {overflow-wrap:anywhere}
+
 .editor .check-label input {
 	width: auto;
 }

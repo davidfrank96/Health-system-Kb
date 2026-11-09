@@ -1,6 +1,6 @@
 # Repository instructions
 
-**Current scope (6 November 2026).** Phase 01 was accepted and merged through PR #1 at f9423c0. The owner authorized Phase 02 local availability monitoring on phase-02/availability-monitoring. Stop at its acceptance gate. The owner has authorized committing/pushing Phase 02 and opening its review PR. Merge, deployment, live targets and Phase 03 still require separate approval. Read GOALS, PLANS, lean requirements and applicable designs first. Historical archives are not active instructions.
+**Current scope (9 November 2026).** Phase 02 merged through PR #2 at be8d2eb. Phase 03 local implementation and fixture tests are authorized on phase-03/infrastructure-health. Stop for owner review before publication or any live collection.
 
 ## Git review workflow
 
