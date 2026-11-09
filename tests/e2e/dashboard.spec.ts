@@ -219,15 +219,36 @@ test("inventory shows a slow database read, recovers from the actual timeout, an
 	page,
 }) => {
 	await login(page, "viewer");
-	await page.goto("/infrastructure-health");
+	await page.goto("/reports-history");
 	const owner = await testClient("migrator");
 	try {
 		// Only the disposable test database is eligible. The web query has a 5s statement timeout.
 		await owner.query("BEGIN");
 		await owner.query("LOCK TABLE services IN ACCESS EXCLUSIVE MODE");
-		// Inventory management moved to Settings when Application Status gained real monitoring.
+		// Start a read with the same cookie and wait until it is blocked by our lock.
+		const blockedRead = page.request.get(
+			"/api/v1/services?environment=development",
+		);
+		await expect
+			.poll(
+				async () =>
+					(
+						await owner.query(
+							"SELECT EXISTS (SELECT FROM pg_stat_activity WHERE pg_backend_pid() = ANY(pg_blocking_pids(pid))) AS waiting",
+						)
+					).rows[0].waiting,
+			)
+			.toBe(true);
+		// An independent authenticated request must finish while inventory is still blocked.
+		expect(
+			await Promise.race([
+				page.request.get("/api/v1/me").then((response) => response.status()),
+				blockedRead.then(() => "inventory finished first"),
+			]),
+		).toBe(200);
 		await page.goto("/settings-integrations");
 		await expect(page.getByText("Loading service inventory…")).toBeVisible();
+		expect((await blockedRead).status()).toBe(503);
 		await expect(
 			page.getByText("The service inventory could not be loaded."),
 		).toBeVisible({ timeout: 10000 });
